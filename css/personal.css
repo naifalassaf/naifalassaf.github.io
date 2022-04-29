@@ -1,0 +1,255 @@
+/* Color Theme Swatches in Hex
+.Cles-de-la-gestion1-1-hex { color: #F7701D; } orange
+.Cles-de-la-gestion1-2-hex { color: #FBAD7D; } light orange
+.Cles-de-la-gestion1-3-hex { color: #FDDECB; } light light orange
+.Cles-de-la-gestion1-4-hex { color: black; } grey
+.Cles-de-la-gestion1-5-hex { color: #B0B0B0; } light grey
+font-family: 'Bitter', serif;
+font-family: 'Bree Serif', serif;
+font-family: 'Montserrat', sans-serif;
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Bitter&family=Bree+Serif&family=Montserrat&display=swap');
+
+*,*:before, *:after {
+  padding: 0 ;
+  margin: 0 ;
+}
+.title {
+  font-size: 48px;
+}
+.subtitle {
+  font-family: 'Bitter', serif;
+  color: #636363;
+  font-size: 20px;
+  margin: auto;
+  text-align: center;
+}
+body {
+  background-color: White;
+  color: black;
+  font-family: 'Montserrat', sans-serif;
+  margin:0.5px;
+  font-size: 20px;
+}
+
+header {
+  font-family: 'Bree Serif', serif;
+  padding: 2px;
+  margin: 5px 5% 5px 5% solid #B3D8E4;
+  text-align: center;
+  color: black;
+  background-color: #B3D8E4;
+}
+h1,h2,h3{
+  font-family: 'Bitter', serif;
+}
+
+h1 {
+  font-size: 1.2em;
+  margin-top: 1em;
+}
+
+h2 {
+  font-size: 1.2em;
+  text-align: center;
+  margin: auto;
+}
+img{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+h3, summary, details {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  text-align: left;
+  font-size: 1.0em;
+  font-weight: 300;
+  padding-left: 20px;
+}
+
+p {
+  display: flex;
+  align-items: center;
+  font-size: 0.7em;
+  margin: 0 7% 2em 7%;
+}
+
+
+nav {
+  border-bottom: 10px ;
+  display: block;
+  text-align: center;
+  margin-top: 2% solid #B3D8E4;
+  background-color: #B3D8E4;
+}
+
+.nav-area{
+  border: 0.6em solid #B3D8E4;
+  color: black;
+  margin-left: 2vw;
+  margin-right: 2vw;
+  text-decoration: none;
+  display: block;
+  font-size: 0.9em;
+  font-family: 'Bitter', serif;
+  cursor: pointer;
+}
+.nav-area:hover{
+  text-decoration: underline;
+  font-weight: 700;
+
+}
+#github {
+  color: black;
+  margin-left: auto;
+  margin-right: auto;
+}
+#twitter {
+  color: #1DA1F2;
+  margin-left: auto;
+  margin-right: auto;
+}
+#linkedin {
+  color: #0077B5;
+  margin-left: auto;
+  margin-right: auto;
+}
+#instagram {
+  color: #E1306C;    ;
+  margin-left: auto;
+  margin-right: auto;
+}
+ul li{
+  display:inline-block;
+  align-items: center;
+  margin: 1em 1em 1em 1em;
+}
+ul {
+  display: table;
+  margin: 0 auto;
+  justify-content: space-around;
+}
+ @media screen and (max-width: 550px){
+ img {
+  width: 178px;
+  height: auto;
+  align-items: center;
+  margin-top: 2em;
+  margin-right: auto;
+  margin-left: auto;
+}
+.resume {
+  margin: auto;
+  width: auto;
+  margin-left: auto ;
+  margin-right: auto ;
+}
+object{
+  width: 30em;
+  height: 37em;
+}
+#github {
+  color: black;
+  font-size: 1.5em;
+  margin-left: auto;
+  margin-right: auto;
+}
+#twitter {
+  color: #1DA1F2;
+  font-size: 1.5em;
+  margin-left: auto;
+  margin-right: auto;
+}
+#linkedin {
+  color: #0077B5;
+  font-size: 1.5em;
+  margin-left: auto;
+  margin-right: auto;
+}
+#instagram {
+  color: #E1306C;   
+  font-size: 1.5em; ;
+  margin-left: auto;
+  margin-right: auto;
+}
+}
+
+footer{
+  font-size: 0.6em;
+  padding-top: 1em;
+  margin-right: 10px;
+  text-align: center;
+}
+
+.sr-only {
+  border: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  padding: 0;
+}
+
+.resume {
+  width: 820px;
+  margin-left: auto ;
+  margin-right: auto ;
+}
+
+@media screen and (min-width: 550px){
+  #content {
+    align-items: center;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  body {
+    background-color: White;
+    color: black;
+    margin:0.5px;
+    font-size: 25px;
+  }
+  object{
+    display: flex;
+    align-items: center;
+    width: 37em;
+    height: 40em;
+    margin: auto;
+  }
+  img {
+    float: left;
+    margin-right: 1em;
+    margin-left: auto;
+ }
+  nav ul li{
+    display:inline-block;
+  }
+
+
+  h1 {
+    display: block;
+    font-size: 2em;
+    margin-top: 1em;
+  }
+
+  p {
+    margin: 0 25% 1.75em 25%;
+    font-size: 0.8em;
+  }
+  h2 {
+    text-align: left;
+    margin: 2em 0px 0.75em 23%;
+
+  }
+  h3 {
+    margin: 2em 0px 0.75em 23%;
+    text-align: left;
+    font-size: 1.0em;
+  }
+
+
+}
