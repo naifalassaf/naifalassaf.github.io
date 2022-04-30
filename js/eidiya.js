@@ -18,14 +18,24 @@ function shuffle(array) {
 
 function checkforties(arr1, arr2, ties){
     for(let i = 0; i < arr1.length; i++){
-        for(let j = 0; j < ties.length; j++){
-            console.log(arr1[i], arr2[i] + " " + ties[j]);
-            if((arr1[i] == ties[j][0] && arr2[i] ==ties[j][1]) || (arr2[i] == ties[j][0] && arr1[i] ==ties[j][1]) || (arr1[i] == arr2[i])){
+        if(ties.length > 0){
+            for(let j = 0; j < ties.length; j++){
+                if((arr1[i] == ties[j][0] && arr2[i] ==ties[j][1]) || (arr2[i] == ties[j][0] && arr1[i] ==ties[j][1]) || (arr1[i] == arr2[i])){
+                    console.log("TIE");
+                    return true;
+                }
+            }
+        }
+        else{
+            if((arr1[i] == arr2[i])){
                 console.log("TIE");
                 return true;
             }
-        }
+        }   
     }
+    console.log(arr1);
+    console.log(arr2);
+    console.log("NO TIE");
     return false;
 }
 
@@ -35,6 +45,10 @@ function checkforties(arr1, arr2, ties){
 function getConnections(names){
     var connections = [];
     var namesArr = [];
+    for(let i = 0; i < names.length; i++){
+        names[i] = names[i].replace(" ", "");
+    }
+    console.log(names);
     for(let i = 0; i < names.length; i++){
         var name = names[i].split(",");
         namesArr.push(name[0]);
@@ -59,17 +73,18 @@ function populateArray(textbox){
 }
 //function that activates when pressing the button
 function eidiyah(){
-    var flag = true;
+    var flag = false;
     var connections = getConnections(populateArray(document.getElementById("entry")));
     var names = connections[0];
     var connections = connections[1];
-    console.log(names);
     var arr = names.slice(0);
     var result = "";
     shuffle(arr);
     while(flag != true){
+        console.log("checking");
         if(checkforties(arr, names, connections)){
             shuffle(arr);
+            console.log("TIE");
         }
         else{
             flag = true;
