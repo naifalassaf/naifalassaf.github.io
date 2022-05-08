@@ -100,3 +100,5 @@ function eidiyah(){
 
 var btn = document.getElementById("mybutton");
 btn.addEventListener("click", eidiyah);
+var btn = document.getElementById("mybutton");
+btn.addEventListener("click", document.getElementById("zone").innerHTML = "not done yet!");
