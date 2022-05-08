@@ -1,8 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Bitter&family=Bree+Serif&family=Montserrat&display=swap');
-
+body {
+    background-color: #0F3290;
+    color: #C38D37;
+    font-family: 'Montserrat', sans-serif;
+    margin:0.5px;
+    font-size: 20px;
+}
 h1 {
     font-family: 'Bitter', serif;
-    color: #464646;
+    color: #C38D37;
     font-size: 20px;
     margin: auto;
     text-align: left;
@@ -11,7 +17,7 @@ h2 {
     font-family: 'Bree Serif', serif;
     padding: 2px;
     text-align: left;
-    color: black;
+    color: #C38D37;
 }
 p{
     font-family: 'Montserrat', sans-serif;
