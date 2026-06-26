@@ -20,5 +20,6 @@
   "duplicateNames": "Duplicate names found — every participant must have a unique name.",
   "invalidExclude": "\"{{exclude}}\" in the exclusion for \"{{name}}\" doesn't match any participant name.",
   "noAssignment": "Couldn't find a valid assignment with these constraints. Try removing some pairings.",
+  "shareOnWhatsApp": "Share on WhatsApp",
   "footer": "Built by Naif Alassaf"
 }
