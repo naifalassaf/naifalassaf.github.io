@@ -10,14 +10,24 @@ const projects = [
     description:
       'A front-end product that manages requests through complex multi-step workflows powered by Camunda 7. Includes interactive dashboards and ECharts visualizations to surface insights on request volume and user behavior. Replaced a manual process previously managed via emails and spreadsheets — now fully automated and self-contained.',
     tags: ['React', 'TypeScript', 'Camunda 7', 'ECharts', 'Ant Design'],
-    link: null,
+    github: null,
+    demo: null,
   },
   {
     title: 'CRD App — CU Boulder Psychology Dept.',
     description:
       "Collaborated with the University of Colorado Boulder Psychology Department's Correll Lab to update and gamify their Cross Racial Deficit (CRD) mobile application. The team streamlined the CI/CD pipeline, rewrote documentation, refreshed the UI, and added gamification features to improve study participation.",
     tags: ['Mobile', 'UI/UX', 'CI/CD', 'Agile', 'Documentation'],
-    link: 'https://github.com/naifalassaf',
+    github: 'https://github.com/naifalassaf',
+    demo: null,
+  },
+  {
+    title: 'Eidiyah',
+    description:
+      'A gift exchange randomizer built for Eid celebrations. Enter your participants, optionally mark connection constraints (pairs who should not gift each other), and get a valid random assignment instantly. Built with React and TypeScript.',
+    tags: ['React', 'TypeScript', 'Personal'],
+    github: null,
+    demo: '/eidiyah',
   },
 ]
 
@@ -35,17 +45,30 @@ export default function Projects() {
             >
               <div className="flex items-start justify-between mb-5">
                 <span className="text-cyan-400 text-3xl select-none">◈</span>
-                {project.link && (
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-slate-500 hover:text-cyan-400 transition-colors"
-                    aria-label="GitHub repository"
-                  >
-                    <GitHubIcon />
-                  </a>
-                )}
+                <div className="flex items-center gap-3">
+                  {project.demo && (
+                    <a
+                      href={project.demo}
+                      className="text-slate-500 hover:text-cyan-400 transition-colors"
+                      aria-label="Live demo"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                  )}
+                  {project.github && (
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-slate-500 hover:text-cyan-400 transition-colors"
+                      aria-label="GitHub repository"
+                    >
+                      <GitHubIcon />
+                    </a>
+                  )}
+                </div>
               </div>
 
               <h3 className="text-slate-100 font-semibold text-xl mb-3 group-hover:text-cyan-400 transition-colors leading-snug">
