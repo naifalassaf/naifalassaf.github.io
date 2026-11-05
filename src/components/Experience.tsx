@@ -4,6 +4,9 @@ import { formatPeriod, resume } from '../data/resume'
 const jobs = resume.experience.flatMap((job) =>
   job.roles.map((role) => ({
     company: job.company,
+    formerly: job.formerly,
+    logo: job.logo,
+    url: job.url,
     role: role.title,
     period: formatPeriod(role.start, role.end, '—'),
     note: job.program,
@@ -29,14 +32,31 @@ export default function Experience() {
 
                 <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-7 hover:border-cyan-400/30 hover:-translate-y-0.5 transition-all duration-200">
                   <div className="flex flex-wrap items-start justify-between gap-3 mb-1">
+                    <div className="flex items-start gap-4">
+                    {job.logo && (
+                      <a
+                        href={job.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="shrink-0 flex items-center justify-center w-20 h-12 bg-white rounded-lg px-2.5 ring-1 ring-slate-600/40"
+                        aria-label={job.company}
+                      >
+                        {/* official logos are dark-on-light, so they sit on a white tile */}
+                        <img src={job.logo} alt={`${job.company} logo`} className="max-h-6 w-full object-contain" loading="lazy" />
+                      </a>
+                    )}
                     <div>
                       <h3 className="text-slate-100 font-semibold text-lg leading-snug">
                         {job.role}
                       </h3>
-                      <p className="text-cyan-400 font-mono text-sm mt-0.5">{job.company}</p>
+                      <p className="text-cyan-400 font-mono text-sm mt-0.5">
+                        {job.company}
+                        {job.formerly && <span className="text-slate-500"> (formerly {job.formerly})</span>}
+                      </p>
                       {job.note && (
                         <p className="text-slate-500 text-xs mt-0.5 italic">{job.note}</p>
                       )}
+                    </div>
                     </div>
                     <span className="font-mono text-xs text-slate-400 bg-slate-700/60 border border-slate-600/50 px-3 py-1.5 rounded-full whitespace-nowrap">
                       {job.period}

@@ -14,7 +14,9 @@
   },
   "experience": [
     {
-      "company": "SITE",
+      "company": "Site",
+      "logo": "/logos/site.svg",
+      "url": "https://site.sa",
       "location": "Riyadh, Saudi Arabia",
       "roles": [
         {
@@ -44,7 +46,10 @@
       ]
     },
     {
-      "company": "Checkboard",
+      "company": "Kord",
+      "formerly": "Checkboard",
+      "logo": "/logos/kord.svg",
+      "url": "https://kord.com",
       "program": "Misk London Internship Program",
       "roles": [
         {
@@ -126,7 +131,7 @@
   ],
   "site": {
     "tagline": "I build things for the web.",
-    "intro": "Senior Front-End Engineer specializing in **React** and **TypeScript**. I build intuitive interfaces, reusable component systems, and AI-assisted development workflows — currently at **SITE**.",
+    "intro": "Senior Front-End Engineer specializing in **React** and **TypeScript**. I build intuitive interfaces, reusable component systems, and AI-assisted development workflows — currently at **Site**.",
     "about": [
       "I'm a Senior Front-End Engineer based in Saudi Arabia with {years} years of professional experience building web applications and developer tooling. I specialize in **React** and **TypeScript**, with a strong focus on reusable component systems, interactive data dashboards, and putting AI-assisted development to work for the engineering teams I work with.",
       "I studied Computer Science — with a minor in Space! — at the **University of Colorado Boulder**, graduating in 2022. I made the Dean's List twice and built a foundation in software engineering that I've carried into every role since.",

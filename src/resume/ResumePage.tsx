@@ -62,7 +62,15 @@ export default function ResumePage() {
           <h2>Experience</h2>
           {experience.map((job) => (
             <div className="entry" key={job.company}>
-              <Row left={<strong>{job.company}</strong>} right={job.location ?? job.program} />
+              <Row
+                left={
+                  <>
+                    <strong>{job.company}</strong>
+                    {job.formerly && <> (formerly {job.formerly})</>}
+                  </>
+                }
+                right={job.location ?? job.program}
+              />
               {job.roles.map((role) => (
                 <div className="role" key={role.title}>
                   <Row

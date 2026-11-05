@@ -23,6 +23,11 @@ export interface Role {
 
 export interface Job {
   company: string
+  /** the company's name when you worked there, if it has since changed */
+  formerly?: string
+  /** path under public/, e.g. "/logos/site.svg" */
+  logo?: string
+  url?: string
   location?: string
   program?: string
   roles: Role[]
