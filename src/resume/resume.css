@@ -112,7 +112,7 @@ h2 {
   hyphens: auto;
 }
 
-/* \resumeSubheading: bold left / plain right, then italic left / italic small right */
+/* \resumeSubheading: bold left / plain right, then italic left / upright small right */
 .row {
   display: flex;
   justify-content: space-between;
@@ -129,6 +129,7 @@ h2 {
 }
 .row.sub .right {
   font-size: 9.4pt;
+  font-style: normal; /* dates read better upright */
 }
 .entry {
   margin-top: 4px;
