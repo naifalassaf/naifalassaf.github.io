@@ -74,13 +74,9 @@ export interface Resume {
   skills: SkillGroup[]
   projects: Project[]
   education: Education[]
+  /** website-only copy */
   site: {
-    tagline: string
-    intro: string
-    about: string[]
-    primaryLanguage: string
-    primaryFramework: string
-    skillIcons: Record<string, string>
+    offTheClock: string
   }
 }
 
@@ -106,22 +102,9 @@ export function formatPeriod(start: YearMonth, end: YearMonth | null, dash = 'â€
   return `${formatMonth(start)} ${dash} ${formatMonth(end)}`
 }
 
-/** Whole years since the first role started. */
-export function yearsOfExperience(now = new Date()) {
-  const first = resume.experience
-    .flatMap((j) => j.roles.map((r) => parts(r.start)))
-    .reduce((a, b) => (a.y * 12 + a.m <= b.y * 12 + b.m ? a : b))
-  const months = now.getFullYear() * 12 + now.getMonth() + 1 - (first.y * 12 + first.m)
-  return Math.floor(months / 12)
-}
-
-export const companyCount = () => new Set(resume.experience.map((j) => j.company)).size
-
 export const projectsFor = (where: 'site' | 'resume') => resume.projects.filter((p) => p.showOn.includes(where))
 
 /** The only markup the JSON uses: **emphasis**. Returns alternating plain/emphasised runs. */
 export function runs(text: string): { text: string; em: boolean }[] {
   return text.split(/\*\*(.+?)\*\*/g).map((t, i) => ({ text: t, em: i % 2 === 1 }))
 }
-
-export const fillYears = (text: string) => text.replace('{years}', String(yearsOfExperience()))

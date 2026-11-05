@@ -1,0 +1,61 @@
+/* Home page palette. Light = paper / ink / burnt orange; dark = "desert night".
+   html[data-theme] pins a mode; without it the OS decides. Scoped to html.home so
+   Eidiyah, which shares index.css, keeps its own look. */
+html.home {
+  --paper: #f4f0e8;
+  --ink: #1b1a17;
+  --muted: #6b655b;
+  --rule: rgb(27 26 23 / 0.14);
+  --accent: #c2410c;
+  --accent-soft: rgb(194 65 12 / 0.1);
+  --contour: rgb(27 26 23 / 0.13);
+  --contour-strong: rgb(194 65 12 / 0.35);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  html.home:not([data-theme='light']) {
+    --paper: #171412;
+    --ink: #ece4d6;
+    --muted: #a39a8c;
+    --rule: rgb(236 228 214 / 0.13);
+    --accent: #ec7f4b;
+    --accent-soft: rgb(236 127 75 / 0.12);
+    --contour: rgb(236 228 214 / 0.1);
+    --contour-strong: rgb(236 127 75 / 0.4);
+    color-scheme: dark;
+  }
+}
+html.home[data-theme='dark'] {
+  --paper: #171412;
+  --ink: #ece4d6;
+  --muted: #a39a8c;
+  --rule: rgb(236 228 214 / 0.13);
+  --accent: #ec7f4b;
+  --accent-soft: rgb(236 127 75 / 0.12);
+  --contour: rgb(236 228 214 / 0.1);
+  --contour-strong: rgb(236 127 75 / 0.4);
+  color-scheme: dark;
+}
+
+html.home body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Instrument Sans', system-ui, sans-serif;
+  transition: background 0.3s, color 0.3s;
+}
+html.home .mono {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  letter-spacing: 0.02em;
+}
+html.home a {
+  text-underline-offset: 3px;
+}
+html.home ::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
+html.home :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
