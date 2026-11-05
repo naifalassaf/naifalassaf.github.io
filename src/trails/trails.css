@@ -654,3 +654,91 @@ html[lang='en'] .legend {
 .google-logo img {
   display: block;
 }
+
+/* ---------- my location ---------- */
+.me {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #2563eb;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.25), 0 1px 4px rgb(0 0 0 / 0.35);
+  animation: me-pulse 2.4s ease-out infinite;
+}
+@keyframes me-pulse {
+  0% { box-shadow: 0 0 0 1px rgb(0 0 0 / 0.25), 0 0 0 0 rgb(37 99 235 / 0.45); }
+  70% { box-shadow: 0 0 0 1px rgb(0 0 0 / 0.25), 0 0 0 14px rgb(37 99 235 / 0); }
+  100% { box-shadow: 0 0 0 1px rgb(0 0 0 / 0.25), 0 0 0 0 rgb(37 99 235 / 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .me { animation: none; }
+}
+.me-ring {
+  fill: #2563eb;
+  fill-opacity: 0.1;
+  stroke: #2563eb;
+  stroke-opacity: 0.35;
+  stroke-width: 1;
+}
+.locate a {
+  display: grid !important;
+  place-items: center;
+}
+.locate a.busy svg {
+  animation: locate-spin 1s linear infinite;
+}
+@keyframes locate-spin {
+  to { transform: rotate(360deg); }
+}
+.locate-help {
+  position: absolute;
+  z-index: 1000;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(360px, calc(100% - 24px));
+  padding: var(--space-2);
+  background: var(--sand-100);
+  color: var(--ink-900);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgb(46 42 36 / 0.18);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.55;
+}
+.locate-help p {
+  margin: 0 0 8px;
+}
+.locate-help .lh-title {
+  font-weight: 600;
+  font-size: 15px;
+}
+.locate-help ol {
+  margin: 0 0 12px;
+  padding-inline-start: 20px;
+}
+.locate-help li + li {
+  margin-top: 4px;
+}
+.locate-help .lh-actions {
+  display: flex;
+  gap: 8px;
+}
+.locate-help button {
+  min-height: 40px;
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--samar-700);
+  background: var(--samar-700);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.locate-help button.quiet {
+  background: transparent;
+  color: var(--ink-900);
+  border-color: var(--hairline);
+}

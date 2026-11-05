@@ -40,6 +40,38 @@ const ar = {
   empty: 'لا توجد مسارات مطابقة.',
   legend: { ksrnr: 'محمية الملك سلمان', darb: 'جمعية درب', route: 'خط المسار' },
   layers: { sat: 'صور الأقمار الصناعية', topo: 'خريطة تضاريس' },
+  locate: {
+    button: 'موقعي',
+    retry: 'حاول مرة أخرى',
+    close: 'إغلاق',
+    denied: {
+      title: 'الوصول إلى الموقع مرفوض',
+      body: 'لعرض موقعك على الخريطة، اسمح لهذه الصفحة بالوصول إلى موقعك ثم اضغط «حاول مرة أخرى». موقعك يبقى على جهازك ولا يُرسَل أو يُحفَظ.',
+    },
+    unavailable: {
+      title: 'تعذّر تحديد موقعك',
+      body: 'لم يصل جهازك إلى إشارة الموقع. جرّب في مكان مكشوف، أو تأكد أن خدمات الموقع مفعّلة في الجهاز.',
+    },
+    unsupported: {
+      title: 'المتصفح لا يدعم تحديد الموقع',
+      body: 'جرّب فتح الصفحة في متصفح آخر.',
+    },
+    steps: {
+      ios: [
+        'في سفاري: اضغط على «aA» أو أيقونة الإعدادات في شريط العنوان، ثم «إعدادات الموقع» ← «الموقع» ← «سماح».',
+        'إذا لم يظهر الخيار: الإعدادات ← الخصوصية والأمان ← خدمات الموقع، وتأكد أنها مفعّلة وأن «مواقع سفاري» على «أثناء الاستخدام».',
+      ],
+      android: [
+        'اضغط على أيقونة القفل أو الإعدادات بجانب عنوان الصفحة.',
+        'اختر «الأذونات» ← «الموقع» ← «سماح».',
+        'تأكد أن الموقع مفعّل في إعدادات الجهاز.',
+      ],
+      desktop: [
+        'اضغط على أيقونة القفل أو الإعدادات بجانب عنوان الصفحة في المتصفح.',
+        'غيّر «الموقع» إلى «سماح»، ثم أعد تحميل الصفحة إذا طُلب منك.',
+      ],
+    },
+  },
   about: {
     heading: 'عن البيانات وحقوقها',
     ksrnr:
@@ -92,6 +124,38 @@ const en: typeof ar = {
   empty: 'No trails match.',
   legend: { ksrnr: 'King Salman Royal Reserve', darb: 'Darb', route: 'Route' },
   layers: { sat: 'Satellite', topo: 'Terrain' },
+  locate: {
+    button: 'My location',
+    retry: 'Try again',
+    close: 'Close',
+    denied: {
+      title: 'Location access is blocked',
+      body: 'To see where you are on the map, allow this page to use your location, then tap “Try again”. Your location stays on your device: it isn’t sent anywhere or stored.',
+    },
+    unavailable: {
+      title: 'Couldn’t find your location',
+      body: 'Your device didn’t get a location fix. Try somewhere with open sky, or check that location services are on.',
+    },
+    unsupported: {
+      title: 'This browser can’t share your location',
+      body: 'Try opening the page in another browser.',
+    },
+    steps: {
+      ios: [
+        'In Safari, tap “aA” or the settings icon in the address bar, then Website Settings → Location → Allow.',
+        'If that’s not there: Settings → Privacy & Security → Location Services. Make sure it’s on and Safari Websites is set to “While Using the App”.',
+      ],
+      android: [
+        'Tap the lock or settings icon next to the page address.',
+        'Choose Permissions → Location → Allow.',
+        'Check that location is turned on in your phone’s settings.',
+      ],
+      desktop: [
+        'Click the lock or settings icon next to the page address.',
+        'Set Location to Allow, then reload the page if asked.',
+      ],
+    },
+  },
   about: {
     heading: 'About the data',
     ksrnr:

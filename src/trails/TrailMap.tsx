@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useTranslation } from 'react-i18next'
 import type { Lang, Routes, Trail } from './types'
 import { duration, num, pick } from './format'
 import { googleSatellite } from './googleSatellite'
+import { useMyLocation } from './useMyLocation'
 
 const GOOGLE_KEY = import.meta.env.VITE_GOOGLE_MAPS_KEY
 
@@ -21,6 +23,18 @@ const esc = (s: string) =>
 
 const ROUTE = { color: '#5F6F4E', weight: 3, opacity: 0.85 }
 const ROUTE_ON = { color: '#C4652F', weight: 5, opacity: 1 }
+
+const ME_ICON = L.divIcon({ className: '', iconSize: [18, 18], iconAnchor: [9, 9], html: '<span class="me"></span>' })
+
+type Help = 'denied' | 'unavailable' | 'unsupported'
+
+/** which set of "turn location back on" steps to show */
+function platform(): 'ios' | 'android' | 'desktop' {
+  const ua = navigator.userAgent
+  if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return 'ios'
+  if (/Android/.test(ua)) return 'android'
+  return 'desktop'
+}
 
 function icon(t: Trail, on: boolean) {
   const cls = on ? 'sel' : t.source
@@ -41,6 +55,12 @@ export default function TrailMap({ trails, visible, selected, routes, onSelect }
   onSelectRef.current = onSelect
   const [ready, setReady] = useState(false)
   const first = useRef(true)
+  const me = useMyLocation()
+  const meRef = useRef(me)
+  meRef.current = me
+  const meLayers = useRef<{ dot: L.Marker; ring: L.Circle } | null>(null)
+  const [help, setHelp] = useState<Help | null>(null)
+  const [locating, setLocating] = useState(false)
 
   /* map, once */
   useEffect(() => {
@@ -101,9 +121,27 @@ export default function TrailMap({ trails, visible, selected, routes, onSelect }
         `<div><span class="ln"></span>${esc(t('legend.route'))}</div>`
       return d
     }
+    const locate = new L.Control({ position: 'topleft' })
+    locate.onAdd = () => {
+      const bar = L.DomUtil.create('div', 'leaflet-bar locate')
+      const a = L.DomUtil.create('a', '', bar)
+      a.href = '#'
+      a.role = 'button'
+      a.title = t('locate.button')
+      a.setAttribute('aria-label', t('locate.button'))
+      a.innerHTML =
+        '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+      L.DomEvent.disableClickPropagation(bar)
+      L.DomEvent.on(a, 'click', (e) => {
+        L.DomEvent.preventDefault(e)
+        onLocateRef.current()
+      })
+      return bar
+    }
     layers.addTo(m)
+    locate.addTo(m)
     legend.addTo(m)
-    controls.current = [layers, legend]
+    controls.current = [layers, locate, legend]
     const credit = lang === 'ar' ? 'المسارات: محمية الملك سلمان · جمعية درب' : 'Trails: KSRNR · Darb'
     m.attributionControl.addAttribution(credit)
     return () => {
@@ -188,8 +226,84 @@ export default function TrailMap({ trails, visible, selected, routes, onSelect }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected, routesLoaded])
 
+  /* the visitor's position: a dot, plus a ring for how sure the browser is */
+  useEffect(() => {
+    const m = map.current
+    if (!m) return
+    if (!me.pos) {
+      meLayers.current?.dot.remove()
+      meLayers.current?.ring.remove()
+      meLayers.current = null
+      return
+    }
+    if (!meLayers.current) {
+      meLayers.current = {
+        ring: L.circle(me.pos, { radius: me.accuracy, className: 'me-ring', interactive: false }).addTo(m),
+        dot: L.marker(me.pos, { icon: ME_ICON, interactive: false, keyboard: false, zIndexOffset: 2000 }).addTo(m),
+      }
+    } else {
+      meLayers.current.dot.setLatLng(me.pos)
+      meLayers.current.ring.setLatLng(me.pos).setRadius(me.accuracy)
+    }
+  }, [me.pos, me.accuracy, ready])
+
+  /* the locate button: fly to the dot, or explain why there isn't one */
+  const onLocateRef = useRef(() => {})
+  onLocateRef.current = async () => {
+    const m = map.current
+    if (!m || locating) return
+    setHelp(null)
+    const fly = (p: [number, number]) => m.flyTo(p, Math.max(m.getZoom(), 15), { duration: 0.9 })
+    const { pos } = meRef.current
+    if (pos) return fly(pos)
+    // ask again even after a denial: some browsers re-prompt, and it's how a fresh grant is noticed
+    setLocating(true)
+    const r = await meRef.current.locateOnce()
+    setLocating(false)
+    if (Array.isArray(r)) fly(r)
+    else setHelp(r)
+  }
+
+  useEffect(() => {
+    el.current?.querySelector('.locate a')?.classList.toggle('busy', locating)
+  }, [locating])
+
   return (
-    <div id="map" ref={el} dir="ltr" role="region" aria-label={t('title')} />
+    <div id="map" ref={el} dir="ltr" role="region" aria-label={t('title')}>
+      {help &&
+        el.current &&
+        createPortal(<LocateHelp kind={help} onClose={() => setHelp(null)} onRetry={() => onLocateRef.current()} />, el.current)}
+    </div>
+  )
+}
+
+function LocateHelp({ kind, onClose, onRetry }: { kind: Help; onClose: () => void; onRetry: () => void }) {
+  const { t, i18n } = useTranslation()
+  const steps = kind === 'denied' ? (t(`locate.steps.${platform()}`, { returnObjects: true }) as string[]) : []
+  return (
+    <div className="locate-help" dir={i18n.dir()} role="alertdialog" aria-labelledby="locate-help-title">
+      <p className="lh-title" id="locate-help-title">
+        {t(`locate.${kind}.title`)}
+      </p>
+      <p>{t(`locate.${kind}.body`)}</p>
+      {steps.length > 0 && (
+        <ol>
+          {steps.map((s) => (
+            <li key={s}>{s}</li>
+          ))}
+        </ol>
+      )}
+      <div className="lh-actions">
+        {kind !== 'unsupported' && (
+          <button type="button" onClick={onRetry}>
+            {t('locate.retry')}
+          </button>
+        )}
+        <button type="button" className="quiet" onClick={onClose}>
+          {t('locate.close')}
+        </button>
+      </div>
+    </div>
   )
 }
 
