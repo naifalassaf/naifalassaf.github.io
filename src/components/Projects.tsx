@@ -4,7 +4,43 @@ const GitHubIcon = () => (
   </svg>
 )
 
-const projects = [
+// Full class strings so Tailwind keeps them. Saudi Trails wears its own brand's sunset.
+const THEMES = {
+  cyan: {
+    card: 'hover:border-cyan-400/30',
+    icon: 'text-cyan-400',
+    title: 'group-hover:text-cyan-400',
+    link: 'hover:text-cyan-400',
+    tag: 'text-cyan-400 bg-cyan-400/10 border-cyan-400/20',
+  },
+  sunset: {
+    card: 'hover:border-[#C4652F]/50',
+    icon: 'text-[#D9824E]',
+    title: 'group-hover:text-[#D9824E]',
+    link: 'hover:text-[#D9824E]',
+    tag: 'text-[#E09A6E] bg-[#C4652F]/10 border-[#C4652F]/30',
+  },
+}
+
+type Project = {
+  title: string
+  description: string
+  tags: string[]
+  github: string | null
+  demo: string | null
+  theme?: keyof typeof THEMES
+}
+
+const projects: Project[] = [
+  {
+    title: 'Saudi Trails',
+    description:
+      'A bilingual (Arabic-first) map of hiking trails across Saudi Arabia, bringing together the King Salman Royal Reserve and the Darb association. Search and filter 39 trails by source, region and difficulty, and see their full routes on satellite or terrain maps. Darb trails refresh weekly at build time from its public data; every trail is credited and linked to its official page.',
+    tags: ['React', 'TypeScript', 'Leaflet', 'i18n · RTL', 'Personal'],
+    github: null,
+    demo: '/trails',
+    theme: 'sunset',
+  },
   {
     title: 'Request Management System',
     description:
@@ -38,18 +74,20 @@ export default function Projects() {
         <h2 className="section-heading">Projects</h2>
 
         <div className="mt-14 grid md:grid-cols-2 gap-6">
-          {projects.map((project, i) => (
+          {projects.map((project, i) => {
+            const th = THEMES[project.theme ?? 'cyan']
+            return (
             <div
               key={i}
-              className="group bg-slate-800/60 border border-slate-700/50 rounded-xl p-8 flex flex-col hover:border-cyan-400/30 hover:-translate-y-1 transition-all duration-200"
+              className={`group bg-slate-800/60 border border-slate-700/50 rounded-xl p-8 flex flex-col ${th.card} hover:-translate-y-1 transition-all duration-200`}
             >
               <div className="flex items-start justify-between mb-5">
-                <span className="text-cyan-400 text-3xl select-none">◈</span>
+                <span className={`${th.icon} text-3xl select-none`}>◈</span>
                 <div className="flex items-center gap-3">
                   {project.demo && (
                     <a
                       href={project.demo}
-                      className="text-slate-500 hover:text-cyan-400 transition-colors"
+                      className={`text-slate-500 ${th.link} transition-colors`}
                       aria-label="Live demo"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,7 +100,7 @@ export default function Projects() {
                       href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-slate-500 hover:text-cyan-400 transition-colors"
+                      className={`text-slate-500 ${th.link} transition-colors`}
                       aria-label="GitHub repository"
                     >
                       <GitHubIcon />
@@ -71,7 +109,7 @@ export default function Projects() {
                 </div>
               </div>
 
-              <h3 className="text-slate-100 font-semibold text-xl mb-3 group-hover:text-cyan-400 transition-colors leading-snug">
+              <h3 className={`text-slate-100 font-semibold text-xl mb-3 ${th.title} transition-colors leading-snug`}>
                 {project.title}
               </h3>
 
@@ -83,14 +121,15 @@ export default function Projects() {
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs font-mono text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 px-2.5 py-1 rounded"
+                    className={`text-xs font-mono ${th.tag} border px-2.5 py-1 rounded`}
                   >
                     {tag}
                   </span>
                 ))}
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>

@@ -10,6 +10,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         eidiyah: resolve(__dirname, 'eidiyah.html'),
+        trails: resolve(__dirname, 'trails.html'),
       },
     },
   },

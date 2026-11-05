@@ -17,3 +17,9 @@ tsconfig.node.tsbuildinfo
 .DS_Store
 .vscode/
 .idea/
+
+# Claude Code local state
+.claude/
+
+# Wayfinder planning notes (local)
+.scratch/

@@ -1,0 +1,16 @@
+{
+  "asOf": "2026-11-05",
+  "note": "English names from KSRNR's /en/ trail cards (checked 2026-11-05), without the region prefix.",
+  "trails": {
+    "177": { "name": "Horse Mountain Trail" },
+    "179": { "name": "Turaif Trail" },
+    "178": { "name": "Dabaa Mountains Trail" },
+    "95": { "name": "Tawaran Trail" },
+    "94": { "name": "Aqdah Trail" },
+    "93": { "name": "Sayhan Trail" },
+    "92": { "name": "Abu Al-Houl Trail" },
+    "91": { "name": "Wadi Fajr Trail" },
+    "90": { "name": "Wadi Al-Dhahakiya Trail" },
+    "89": { "name": "Al-Qalbiya Trail" }
+  }
+}

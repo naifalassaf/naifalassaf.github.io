@@ -1,0 +1,22 @@
+{
+  "note": "Our own English for Darb Trails and cities that Darb publishes in Arabic only. Darb's own English names always win.",
+  "names": {
+    "2480": "Jabal Saq Trail",
+    "2518": "Mazal Jabal Al-Shaqra Trail",
+    "2531": "Zabnah Trail",
+    "2551": "Darb Al-Manjour Trail",
+    "2572": "Hawtat Sudair Trail",
+    "2787": "Al-Mardiyah Trail",
+    "2816": "Kara Archaeological Trail",
+    "2875": "Jabal Tamiyah Trail",
+    "2920": "Jabal Al-Ghurabah Trail"
+  },
+  "cities": {
+    "الاحساء": "Al-Ahsa", "الأحساء": "Al-Ahsa", "البكيرية": "Al-Bukayriyah", "الدوادمي": "Al-Dawadmi",
+    "الرياض": "Riyadh", "الطائف": "Taif", "الغاط": "Al-Ghat", "القصيم": "Al-Qassim", "جلاجل": "Jalajil",
+    "حائل": "Hail", "حافة جبال طويق": "Tuwaiq Escarpment", "محافظة الأفلاج": "Al-Aflaj",
+    "محافظة الحريق": "Al-Hariq", "محافظة القويعية": "Al-Quwayiyah", "محافظة ثادق": "Thadiq",
+    "محافظة شقراء": "Shaqra", "محمية الوعول": "Al-Wu'ul Reserve", "حوطة سدير": "Hawtat Sudair",
+    "عقلة الصقور": "Uqlat Al-Suqur", "رغبة": "Rughbah"
+  }
+}

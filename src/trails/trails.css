@@ -1,0 +1,546 @@
+/* Saudi Trails — هوية البراري البصرية, light theme.
+   The map is the hero; the register frames it from the reading-start side. */
+:root {
+  --sand-100: #f2e9da;
+  --sand-300: #d8c6a3;
+  --ink-900: #2e2a24;
+  --ink-600: #5c544a;
+  --samar-700: #4a5840;
+  --samar-500: #5f6f4e;
+  --sunset-600: #c4652f;
+  --hairline: #c9b997;
+  --sans: 'IBM Plex Sans Arabic', 'IBM Plex Sans', system-ui, sans-serif;
+  --latin: 'IBM Plex Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 40px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
+  color-scheme: light;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+body {
+  font-family: var(--sans);
+  background: var(--sand-100);
+  color: var(--ink-900);
+  font-size: 16px;
+  line-height: 28px;
+  -webkit-font-smoothing: antialiased;
+}
+html[lang='en'] body {
+  font-family: var(--latin);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.shell {
+  display: flex;
+  height: 100%;
+}
+#map {
+  flex: 1;
+  min-width: 0;
+  height: 100vh;
+  background: var(--sand-300);
+}
+
+/* ---- register ---- */
+aside {
+  width: 400px;
+  max-width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--sand-100);
+  border-inline-end: 1px solid var(--hairline);
+}
+
+/* masthead sits on the limestone band; ink-900 only (ink-600 fails on sand-300) */
+.masthead {
+  background: var(--sand-300);
+  padding: var(--space-3) var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-bottom: 1px solid var(--hairline);
+}
+.masthead .lockup {
+  width: 54px;
+  flex: none;
+  color: var(--ink-900);
+}
+.masthead .lockup svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.mast-text {
+  flex: 1;
+  min-width: 0;
+}
+.masthead h1 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 600;
+  text-wrap: balance;
+}
+.masthead p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-900);
+  opacity: 0.78;
+}
+.lang {
+  align-self: flex-start;
+  flex: none;
+  font: 500 13px/20px var(--sans);
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--sand-100);
+  color: var(--ink-900);
+  border: 1px solid var(--ink-600);
+  cursor: pointer;
+}
+.lang:hover {
+  background: var(--ink-900);
+  color: var(--sand-100);
+}
+
+.tally {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--hairline);
+}
+.tally div {
+  display: flex;
+  flex-direction: column;
+}
+.tally b {
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.tally span {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-600);
+}
+
+/* filters — control borders take ink-600; hairline is under 3:1 and is for rules only */
+.filters {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.filters .label {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-600);
+  letter-spacing: 0.02em;
+  margin-bottom: 2px;
+}
+.filters .grp {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.filters button {
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 500;
+  padding: 3px 12px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  background: transparent;
+  color: var(--ink-900);
+  border: 1px solid var(--ink-600);
+}
+.filters button:hover {
+  background: var(--sand-300);
+}
+.filters button[aria-pressed='true'] {
+  background: var(--ink-900);
+  color: var(--sand-100);
+  border-color: var(--ink-900);
+}
+.search input,
+.sort select {
+  width: 100%;
+  font: 400 15px/24px var(--sans);
+  color: var(--ink-900);
+  background: #fffaf1;
+  border: 1px solid var(--ink-600);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+}
+.search input::placeholder {
+  color: var(--ink-600);
+}
+.sort {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.sort .label {
+  margin: 0;
+  flex: none;
+}
+.sort select {
+  width: auto;
+  flex: 1;
+  padding: 4px 10px;
+  font-size: 14px;
+}
+.filters button:focus-visible,
+.item:focus-visible,
+a:focus-visible,
+.lang:focus-visible,
+.search input:focus-visible,
+.sort select:focus-visible {
+  outline: 2px solid var(--samar-700);
+  outline-offset: 2px;
+}
+
+/* ---- trail entries ---- */
+.empty {
+  padding: var(--space-3) var(--space-2);
+  color: var(--ink-600);
+  margin: 0;
+}
+.item {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--hairline);
+  cursor: pointer;
+  border-inline-start: 3px solid transparent;
+}
+/* No fill on hover or select: ink-600 secondary text is only valid over sand-100,
+   so the state lives in the leading-edge rule instead of another colour. */
+.item:hover {
+  border-inline-start-color: var(--hairline);
+}
+.item.on {
+  border-inline-start-color: var(--sunset-600);
+  border-inline-start-width: 4px;
+}
+.item h2 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+.item h2 .n {
+  flex: 1;
+  min-width: 0;
+}
+.item h2 sup {
+  color: var(--ink-600);
+  font-weight: 400;
+}
+/* the other language's name takes its own line — mixing scripts in one line reorders it */
+.alt {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-600);
+  margin: 0;
+  text-align: right;
+}
+/* align the other-language name with the main one, not with its own script */
+html[lang='en'] .alt {
+  text-align: left;
+}
+.alt[lang='en'] {
+  font-family: var(--latin);
+}
+.alt[lang='ar'] {
+  font-family: var(--sans);
+}
+.place {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-600);
+  margin: 2px 0 0;
+}
+.place .src {
+  color: var(--samar-700);
+  font-weight: 500;
+}
+
+.data {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  margin-top: var(--space-1);
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-900);
+}
+.data i {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-style: normal;
+}
+.data svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  color: var(--samar-700);
+}
+.data .u {
+  color: var(--ink-600);
+  font-weight: 400;
+}
+
+/* difficulty — a lightness ramp, not a hue pair; the accent is never spent here */
+.pill {
+  display: inline-block;
+  border-radius: var(--radius-pill);
+  padding: 1px 11px;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.pill.easy {
+  background: var(--sand-300);
+  color: var(--ink-900);
+}
+.pill.moderate {
+  background: var(--samar-500);
+  color: var(--sand-100);
+}
+.pill.hard {
+  background: var(--ink-900);
+  color: var(--sand-100);
+}
+
+.links {
+  display: flex;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+  flex-wrap: wrap;
+  align-items: center;
+}
+.links a {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--samar-700);
+  text-decoration: none;
+  border: 1px solid var(--ink-600);
+  padding: 2px 10px;
+  border-radius: var(--radius-sm);
+}
+.links a:hover {
+  background: var(--samar-700);
+  color: var(--sand-100);
+  border-color: var(--samar-700);
+}
+.links .none {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-600);
+}
+
+/* ---- colophon ---- */
+.colophon {
+  padding: var(--space-3) var(--space-2) var(--space-4);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-600);
+}
+.colophon h3 {
+  margin: 0 0 var(--space-1);
+  font-size: 16px;
+  line-height: 28px;
+  font-weight: 600;
+  color: var(--ink-900);
+}
+.colophon p {
+  margin: 0 0 var(--space-1);
+}
+.colophon b {
+  color: var(--ink-900);
+  font-weight: 600;
+}
+.colophon a {
+  color: var(--samar-700);
+}
+
+/* ---- leaflet, dressed in the palette ---- */
+.leaflet-container {
+  font-family: var(--sans);
+}
+.leaflet-popup-content-wrapper {
+  background: var(--sand-100);
+  color: var(--ink-900);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  box-shadow: none;
+}
+.leaflet-popup-tip {
+  background: var(--sand-100);
+  box-shadow: none;
+  border: 1px solid var(--hairline);
+}
+.leaflet-popup-content {
+  font-family: var(--sans);
+  margin: var(--space-2);
+  font-size: 14px;
+  line-height: 22px;
+}
+.leaflet-popup-content .pt {
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 600;
+  display: block;
+}
+.leaflet-popup-content .pm {
+  color: var(--ink-600);
+  font-variant-numeric: tabular-nums;
+}
+.leaflet-popup-content .coords {
+  direction: ltr;
+  display: inline-block;
+}
+.leaflet-popup-content a {
+  color: var(--samar-700);
+}
+.leaflet-popup-close-button {
+  color: var(--ink-600) !important;
+}
+.leaflet-bar,
+.leaflet-control-layers {
+  border: 1px solid var(--hairline) !important;
+  border-radius: var(--radius-sm) !important;
+  box-shadow: none !important;
+}
+.leaflet-bar a {
+  background: var(--sand-100);
+  color: var(--ink-900);
+  border-bottom-color: var(--hairline);
+}
+.leaflet-bar a:hover {
+  background: var(--sand-300);
+  color: var(--ink-900);
+}
+.leaflet-control-layers {
+  background: var(--sand-100);
+  color: var(--ink-900);
+  padding: 6px 8px;
+}
+.leaflet-control-layers label {
+  font-size: 14px;
+  line-height: 22px;
+}
+.leaflet-control-attribution {
+  background: var(--sand-100) !important;
+  color: var(--ink-600) !important;
+  font-size: 11px;
+}
+.leaflet-control-attribution a {
+  color: var(--samar-700) !important;
+}
+
+/* markers: Source by form, difficulty stays in the register, accent = the selected one */
+.mk {
+  display: block;
+  width: 15px;
+  height: 15px;
+  border-radius: var(--radius-pill);
+  box-sizing: border-box;
+}
+.mk.ksrnr {
+  background: var(--samar-500);
+  border: 2px solid var(--ink-900);
+}
+.mk.darb {
+  background: var(--sand-100);
+  border: 3px solid var(--samar-500);
+}
+.mk.sel {
+  background: var(--sunset-600);
+  border: 2px solid var(--ink-900);
+  width: 21px;
+  height: 21px;
+}
+.legend {
+  background: var(--sand-100);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) 10px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-900);
+  direction: rtl;
+}
+html[lang='en'] .legend {
+  direction: ltr;
+}
+.legend div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.legend div + div {
+  margin-top: 3px;
+}
+.legend .ln {
+  display: block;
+  width: 15px;
+  height: 3px;
+  background: var(--samar-500);
+}
+
+@media (max-width: 900px) {
+  /* stack: the map keeps a fixed share on top, the register scrolls with the document */
+  html,
+  body,
+  #root {
+    height: auto;
+  }
+  .shell {
+    flex-direction: column;
+    height: auto;
+  }
+  #map {
+    order: -1;
+    flex: none;
+    height: 46vh;
+    min-height: 300px;
+    width: 100%;
+  }
+  aside {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    border-inline-end: none;
+    border-top: 1px solid var(--hairline);
+  }
+}
