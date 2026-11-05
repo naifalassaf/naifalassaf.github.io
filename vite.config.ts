@@ -11,6 +11,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         eidiyah: resolve(__dirname, 'eidiyah.html'),
         trails: resolve(__dirname, 'trails.html'),
+        resume: resolve(__dirname, 'resume.html'),
       },
     },
   },

@@ -1,38 +1,15 @@
-const jobs = [
-  {
-    company: 'SITE',
-    role: 'Senior Front-End Engineer',
-    period: 'Jan 2025 — Present',
-    bullets: [
-      'Led internal knowledge-sharing discussions on front-end technologies, improving team alignment on best practices.',
-      'Expanded automation across build, testing, and deployment processes to optimize the development pipeline.',
-      'Developed a cross-platform mobile application using Flutter and Dart with clean architecture and modern state management.',
-      'Built a dynamic form builder system reused across multiple projects, supporting varied input types, validation rules, and conditional logic.',
-    ],
-  },
-  {
-    company: 'SITE',
-    role: 'Software Engineer',
-    period: 'Dec 2022 — Jan 2025',
-    bullets: [
-      'Developed pages, components, and tools for clients using React and Ant Design.',
-      'Built interactive dashboards using Apache ECharts to visualize user data and behavior insights.',
-      'Wrote end-to-end automated tests to maintain code quality across the development lifecycle.',
-      'Represented front-end engineering perspectives in project planning and technical decisions.',
-    ],
-  },
-  {
-    company: 'Checkboard',
-    role: 'Software Developer Intern',
-    period: 'Oct 2022 — Dec 2022',
-    note: 'Misk London Internship Program',
-    bullets: [
-      'Implemented bug fixes and enhancements to user dashboards and mobile applications.',
-      'Tested web and mobile features and created detailed tickets for improvements.',
-      'Reviewed production code to maintain quality standards.',
-    ],
-  },
-]
+import { formatPeriod, resume } from '../data/resume'
+
+// one card per role, newest first, as the resume lists them
+const jobs = resume.experience.flatMap((job) =>
+  job.roles.map((role) => ({
+    company: job.company,
+    role: role.title,
+    period: formatPeriod(role.start, role.end, '—'),
+    note: job.program,
+    bullets: role.highlights,
+  })),
+)
 
 export default function Experience() {
   return (

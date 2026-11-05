@@ -1,3 +1,7 @@
+import { resume, runs } from '../data/resume'
+
+const { basics, site } = resume
+
 export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
@@ -14,17 +18,21 @@ export default function Hero() {
           Hi, my name is
         </p>
         <h1 className="text-6xl md:text-8xl font-extrabold text-slate-100 mb-4 leading-none tracking-tight">
-          Naif Alassaf.
+          {basics.name}.
         </h1>
         <h2 className="text-4xl md:text-6xl font-bold text-slate-500 mb-8 leading-tight tracking-tight">
-          I build things for the web.
+          {site.tagline}
         </h2>
         <p className="text-slate-400 text-lg md:text-xl max-w-2xl mb-12 leading-relaxed">
-          Senior Front-End Engineer specializing in{' '}
-          <span className="text-cyan-400 font-semibold">React</span> and{' '}
-          <span className="text-cyan-400 font-semibold">TypeScript</span>. I build intuitive
-          interfaces, reusable component systems, and automation-driven development pipelines —
-          currently at <span className="text-slate-200 font-semibold">SITE</span>.
+          {runs(site.intro).map((r, i) =>
+            r.em ? (
+              <span key={i} className="text-cyan-400 font-semibold">
+                {r.text}
+              </span>
+            ) : (
+              r.text
+            ),
+          )}
         </p>
         <div className="flex flex-wrap gap-4">
           <a

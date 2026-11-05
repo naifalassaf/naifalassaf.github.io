@@ -48,7 +48,7 @@ export default function Navbar() {
           ))}
           <li>
             <a
-              href="/resume - Naif Alassaf.pdf"
+              href="/resume"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm border border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 px-4 py-2 rounded font-mono transition-all"
@@ -91,7 +91,7 @@ export default function Navbar() {
             ))}
             <li>
               <a
-                href="/resume - Naif Alassaf.pdf"
+                href="/resume"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm border border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 px-4 py-2 rounded font-mono transition-all inline-block"

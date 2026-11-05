@@ -1,25 +1,10 @@
-const skillGroups = [
-  {
-    category: 'Languages',
-    icon: '{ }',
-    skills: ['TypeScript', 'JavaScript', 'Dart'],
-  },
-  {
-    category: 'Frameworks & Libraries',
-    icon: '⚛',
-    skills: ['React', 'Flutter', 'Ant Design', 'Apache ECharts'],
-  },
-  {
-    category: 'Tools & Platforms',
-    icon: '⚙',
-    skills: ['Camunda 7', 'Git', 'Vite'],
-  },
-  {
-    category: 'Practices',
-    icon: '◈',
-    skills: ['Agile', 'E2E Testing', 'UI/UX Design', 'Component-Driven Dev'],
-  },
-]
+import { resume } from '../data/resume'
+
+const skillGroups = resume.skills.map((g) => ({
+  category: g.category,
+  icon: resume.site.skillIcons[g.category] ?? '◈',
+  skills: g.items,
+}))
 
 export default function Skills() {
   return (

@@ -1,0 +1,228 @@
+/* Resume: one A4 page in print and in the generated PDF; a paper sheet on screen. */
+@page {
+  size: A4;
+  margin: 10mm 13mm;
+}
+:root {
+  --ink: #16181d;
+  --muted: #555b66;
+  --rule: #d5d8de;
+  --accent: #0e7490; /* the site's cyan, darkened for paper */
+  color-scheme: light;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+}
+body {
+  background: #e9ebef;
+  color: var(--ink);
+  font: 400 9.3pt/1.4 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+p {
+  margin: 0;
+}
+
+.toolbar {
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 16px 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font: 500 13px/1 'Inter', system-ui, sans-serif;
+}
+.toolbar a {
+  color: var(--muted);
+}
+.toolbar .pdf {
+  color: #fff;
+  background: var(--accent);
+  padding: 9px 14px;
+  border-radius: 6px;
+}
+.toolbar .pdf:hover {
+  text-decoration: none;
+  filter: brightness(1.1);
+}
+
+.page {
+  max-width: 210mm;
+  margin: 0 auto 40px;
+  background: #fff;
+  padding: 13mm 15mm;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.12), 0 8px 24px rgb(0 0 0 / 0.06);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 20pt;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.role {
+  margin-top: 1px;
+  font-size: 10.5pt;
+  color: var(--accent);
+  font-weight: 600;
+}
+.contact {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 8.4pt;
+}
+/* separators trail each item, so a wrapped line never starts with one */
+.contact > * {
+  white-space: nowrap;
+}
+.contact > *:not(:last-child)::after {
+  content: '·';
+  margin: 0 6px;
+  color: #a9aeb7;
+}
+
+section {
+  margin-top: 11px;
+}
+h2 {
+  margin: 0 0 4px;
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 2px;
+  break-after: avoid;
+}
+.summary {
+  color: #2b2f36;
+}
+.muted {
+  color: var(--muted);
+  font-weight: 400;
+}
+em.muted {
+  font-style: italic;
+}
+
+.job + .job {
+  margin-top: 8px;
+}
+.org {
+  font-size: 9.6pt;
+}
+.roleblock {
+  margin-top: 1px;
+}
+.roleblock + .roleblock {
+  margin-top: 4px;
+}
+.rolehead {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.rolehead .date {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 8.4pt;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+ul {
+  margin: 2px 0 0;
+  padding-left: 14px;
+}
+li {
+  margin-top: 2px;
+}
+li::marker {
+  color: var(--accent);
+}
+
+.skills {
+  margin: 0;
+  display: grid;
+  gap: 2px;
+}
+.skills div {
+  display: grid;
+  grid-template-columns: 40mm 1fr;
+  gap: 8px;
+}
+.skills dt {
+  font-weight: 600;
+}
+.skills dd {
+  margin: 0;
+}
+
+.project + .project {
+  margin-top: 4px;
+}
+.project a,
+.contact a {
+  color: var(--accent);
+}
+.edu p + p {
+  margin-top: 1px;
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 10.5pt;
+    background: #fff;
+  }
+  .page {
+    padding: 16px;
+    box-shadow: none;
+  }
+  .toolbar {
+    padding: 14px 16px;
+  }
+  .skills div {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+  .toolbar {
+    display: none;
+  }
+  .page {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+  .contact a {
+    color: var(--muted);
+  }
+  a {
+    text-decoration: none !important;
+  }
+  .job,
+  .roleblock,
+  .project,
+  .edu {
+    break-inside: avoid;
+  }
+}
