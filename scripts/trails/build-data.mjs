@@ -25,7 +25,7 @@ const OUT_TRAILS = resolve(ROOT, 'src/trails/data/trails.json')
 const OUT_ROUTES = resolve(ROOT, 'public/data/trail-routes.json')
 const KSRNR_ROUTES = resolve(HERE, 'ksrnr-routes.json')
 const DARB_API = 'https://api.darb.org/api/'
-const UA = 'SaudiTrails-build (+https://naifalassaf.github.io/trails)'
+const UA = 'SaudiTrails-build (+https://naifalassaf.sa/trails)'
 
 const readJson = async (p, fallback) => {
   try { return JSON.parse(await readFile(p, 'utf8')) } catch { return fallback }

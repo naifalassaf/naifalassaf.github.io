@@ -30,7 +30,7 @@ export default function ResumePage() {
     <>
       {/* screen-only toolbar; hidden in print and in the generated PDF */}
       <div className="toolbar">
-        <a href="/">← naifalassaf.github.io</a>
+        <a href="/">← naifalassaf.sa</a>
         <a className="pdf" href={PDF_PATH} download>
           Download PDF
         </a>
