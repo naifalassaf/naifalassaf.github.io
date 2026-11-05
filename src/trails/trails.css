@@ -518,8 +518,45 @@ html[lang='en'] .legend {
   background: var(--samar-500);
 }
 
+/* filters: the search row, and everything else in .more */
+.search-row {
+  display: flex;
+  gap: var(--space-1);
+}
+.search-row .search {
+  flex: 1;
+  min-width: 0;
+}
+.more {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ftoggle {
+  display: none !important; /* phones only */
+}
+.filters .clear {
+  align-self: flex-start;
+  border-style: dashed;
+}
+.badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  margin-inline-start: 6px;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: var(--sunset-600);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 600;
+}
+
 @media (max-width: 900px) {
-  /* stack: the map keeps a fixed share on top, the register scrolls with the document */
+  /* stack: the map stays pinned on top while the register scrolls under it,
+     so picking a Trail in the list is always seen on the map */
   html,
   body,
   #root {
@@ -532,16 +569,80 @@ html[lang='en'] .legend {
   #map {
     order: -1;
     flex: none;
-    height: 46vh;
-    min-height: 300px;
+    position: sticky;
+    top: 0;
+    z-index: 10; /* own stacking context: Leaflet's panes stay inside it */
+    height: 40vh;
+    height: 40svh;
+    min-height: 240px;
     width: 100%;
+    border-bottom: 1px solid var(--hairline);
   }
   aside {
     width: 100%;
     height: auto;
     overflow: visible;
     border-inline-end: none;
-    border-top: 1px solid var(--hairline);
+  }
+  /* a Trail scrolled into view lands below the pinned map, not under it */
+  .item {
+    scroll-margin-top: calc(max(40svh, 240px) + 8px);
+  }
+
+  /* filters fold behind a button; search stays out */
+  .ftoggle {
+    display: inline-flex !important;
+    align-items: center;
+  }
+  .more {
+    display: none;
+  }
+  .more.open {
+    display: flex;
+  }
+
+  /* tap targets: ~44px for controls, ~40px for chips and links */
+  .filters button,
+  .lang {
+    min-height: 40px;
+    padding: 8px 14px;
+  }
+  .search input {
+    min-height: 44px;
+    font-size: 16px; /* 16px stops iOS zooming into the field */
+  }
+  .sort select {
+    min-height: 44px;
+    font-size: 16px;
+  }
+  .links {
+    gap: 10px;
+  }
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 6px 14px;
+    font-size: 14px;
+  }
+  /* #map outranks leaflet.css, which loads after this file */
+  #map .leaflet-bar a {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 20px;
+  }
+  #map .leaflet-control-layers-toggle {
+    width: 40px;
+    height: 40px;
+  }
+  /* keep the legend from covering a third of a small map */
+  .legend {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  .masthead {
+    padding: var(--space-2);
   }
 }
 

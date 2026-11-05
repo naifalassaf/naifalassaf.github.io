@@ -52,6 +52,8 @@ export default function TrailsApp() {
   const [lvl, setLvl] = useState<Difficulty | null>(null)
   const [sort, setSort] = useState<Sort>('default')
   const [selected, setSelected] = useState<string | null>(initialTrail)
+  // phones only: the region/difficulty/sort controls fold behind a Filters button
+  const [filtersOpen, setFiltersOpen] = useState(false)
 
   useEffect(() => {
     fetch("/data/trail-routes.json")
@@ -118,6 +120,13 @@ export default function TrailsApp() {
     return d ? new Date(d + 'T12:00:00Z').toLocaleDateString(lang === 'ar' ? 'ar-SA-u-nu-latn-ca-gregory' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '—'
   }
   const anyOurs = TRAILS.some((x) => x.nameEnOurs)
+  const active = [src, reg, lvl].filter(Boolean).length + (sort === 'default' ? 0 : 1)
+  const clearFilters = () => {
+    setSrc(null)
+    setReg(null)
+    setLvl(null)
+    setSort('default')
+  }
 
   return (
     <div className="shell">
@@ -149,10 +158,23 @@ export default function TrailsApp() {
         </div>
 
         <div className="filters">
-          <label className="search">
-            <span className="sr-only">{t('filters.searchLabel')}</span>
-            <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('filters.search')} />
-          </label>
+          <div className="search-row">
+            <label className="search">
+              <span className="sr-only">{t('filters.searchLabel')}</span>
+              <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('filters.search')} />
+            </label>
+            <button
+              type="button"
+              className="ftoggle"
+              aria-expanded={filtersOpen}
+              aria-controls="filter-more"
+              onClick={() => setFiltersOpen((o) => !o)}
+            >
+              {t('filters.toggle')}
+              {active > 0 && <span className="badge">{num(lang, active)}</span>}
+            </button>
+          </div>
+          <div id="filter-more" className={`more${filtersOpen ? ' open' : ''}`}>
           <Chips label={t('filters.source')} all={t('filters.all')} value={src} onChange={setSrc} options={SOURCES.map((s) => [s, t(`source.${s}`)])} />
           <Chips label={t('filters.region')} all={t('filters.all')} value={reg} onChange={setReg} options={regions.map((r) => [r.ar, pick(r, lang)])} />
           <Chips label={t('filters.difficulty')} all={t('filters.all')} value={lvl} onChange={setLvl} options={LEVELS.map((d) => [d, t(`difficulty.${d}`)])} />
@@ -165,6 +187,12 @@ export default function TrailsApp() {
               <option value="easy">{t('filters.sortEasy')}</option>
             </select>
           </label>
+          {active > 0 && (
+            <button type="button" className="clear" onClick={clearFilters}>
+              {t('filters.clear')}
+            </button>
+          )}
+          </div>
         </div>
 
         <div id="list">
