@@ -1,13 +1,14 @@
-/* Resume: one A4 page in print and in the generated PDF; a paper sheet on screen. */
+/* Resume in the classic LaTeX look (Computer Modern, small-caps rules, flush-right dates).
+   One A4 page in print and in the generated PDF; a paper sheet on screen. */
+@import 'computer-modern/cmu-serif.css';
+
 @page {
   size: A4;
   margin: 10mm 13mm;
 }
 :root {
-  --ink: #16181d;
-  --muted: #555b66;
-  --rule: #d5d8de;
-  --accent: #0e7490; /* the site's cyan, darkened for paper */
+  --ink: #000;
+  --link: #000;
   color-scheme: light;
 }
 * {
@@ -20,20 +21,26 @@ body {
 body {
   background: #e9ebef;
   color: var(--ink);
-  font: 400 9.3pt/1.4 'Inter', system-ui, sans-serif;
+  /* CMU Serif ships its regular face as weight 500 */
+  font: 500 10.2pt/1.25 'CMU Serif', 'Latin Modern Roman', 'Computer Modern', Georgia, serif;
   -webkit-font-smoothing: antialiased;
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures;
+}
+strong {
+  font-weight: 700;
 }
 a {
-  color: inherit;
-  text-decoration: none;
-}
-a:hover {
+  color: var(--link);
   text-decoration: underline;
+  text-decoration-thickness: 0.5pt;
+  text-underline-offset: 1.5pt;
 }
 p {
   margin: 0;
 }
 
+/* screen-only chrome */
 .toolbar {
   max-width: 210mm;
   margin: 0 auto;
@@ -41,150 +48,126 @@ p {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font: 500 13px/1 'Inter', system-ui, sans-serif;
+  font: 500 13px/1 system-ui, sans-serif;
 }
 .toolbar a {
-  color: var(--muted);
+  color: #4a4f57;
+  text-decoration: none;
 }
 .toolbar .pdf {
   color: #fff;
-  background: var(--accent);
+  background: #1f2937;
   padding: 9px 14px;
   border-radius: 6px;
 }
-.toolbar .pdf:hover {
-  text-decoration: none;
-  filter: brightness(1.1);
-}
-
 .page {
   max-width: 210mm;
   margin: 0 auto 40px;
   background: #fff;
-  padding: 13mm 15mm;
+  padding: 12mm 14mm;
   box-shadow: 0 1px 3px rgb(0 0 0 / 0.12), 0 8px 24px rgb(0 0 0 / 0.06);
 }
 
-header h1 {
-  margin: 0;
-  font-size: 20pt;
-  line-height: 1.1;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+/* \textbf{\Huge \scshape Name}, centred, then the contact line */
+header {
+  text-align: center;
 }
-.role {
-  margin-top: 1px;
-  font-size: 10.5pt;
-  color: var(--accent);
-  font-weight: 600;
+h1 {
+  margin: 0;
+  font-size: 25pt;
+  line-height: 1.05;
+  font-weight: 700;
+  font-variant: small-caps;
 }
 .contact {
   margin-top: 4px;
-  color: var(--muted);
-  font-size: 8.4pt;
+  font-size: 9.6pt;
 }
-/* separators trail each item, so a wrapped line never starts with one */
-.contact > * {
+.contact .item {
   white-space: nowrap;
 }
-.contact > *:not(:last-child)::after {
-  content: '·';
-  margin: 0 6px;
-  color: #a9aeb7;
+.location {
+  font-size: 9.6pt;
+  margin-top: 1px;
 }
 
+/* \section{...}: small caps, rule beneath */
 section {
-  margin-top: 11px;
+  margin-top: 7px;
 }
 h2 {
-  margin: 0 0 4px;
-  font-size: 8pt;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-  border-bottom: 1px solid var(--rule);
-  padding-bottom: 2px;
+  margin: 0 0 3px;
+  font-size: 12.2pt;
+  line-height: 1.1;
+  font-weight: 500;
+  font-variant: small-caps;
+  letter-spacing: 0.01em;
+  border-bottom: 0.6pt solid #000;
+  padding-bottom: 1px;
   break-after: avoid;
 }
 .summary {
-  color: #2b2f36;
-}
-.muted {
-  color: var(--muted);
-  font-weight: 400;
-}
-em.muted {
-  font-style: italic;
+  font-size: 9.6pt;
+  text-align: justify;
+  hyphens: auto;
 }
 
-.job + .job {
-  margin-top: 8px;
-}
-.org {
-  font-size: 9.6pt;
-}
-.roleblock {
-  margin-top: 1px;
-}
-.roleblock + .roleblock {
-  margin-top: 4px;
-}
-.rolehead {
+/* \resumeSubheading: bold left / plain right, then italic left / italic small right */
+.row {
   display: flex;
+  justify-content: space-between;
   align-items: baseline;
-  gap: 4px;
-  flex-wrap: wrap;
+  gap: 12px;
 }
-.rolehead .date {
-  margin-left: auto;
-  color: var(--muted);
-  font-size: 8.4pt;
-  font-variant-numeric: tabular-nums;
+.row .right {
   white-space: nowrap;
+  text-align: right;
 }
-ul {
-  margin: 2px 0 0;
-  padding-left: 14px;
+.row.sub {
+  font-style: italic;
+  font-size: 9.8pt;
 }
-li {
+.row.sub .right {
+  font-size: 9.4pt;
+}
+.entry {
+  margin-top: 4px;
+  break-inside: avoid;
+}
+.entry:first-of-type {
   margin-top: 2px;
 }
+.role + .role {
+  margin-top: 3px;
+}
+
+/* \resumeItem: small, tight bullets */
+ul {
+  margin: 1px 0 0;
+  padding-left: 17px;
+  font-size: 9.5pt;
+  line-height: 1.22;
+}
+li {
+  margin-top: 0.5px;
+  padding-left: 1px;
+}
 li::marker {
-  color: var(--accent);
+  font-size: 0.8em;
 }
 
 .skills {
-  margin: 0;
-  display: grid;
-  gap: 2px;
+  font-size: 9.6pt;
 }
-.skills div {
-  display: grid;
-  grid-template-columns: 40mm 1fr;
-  gap: 8px;
-}
-.skills dt {
-  font-weight: 600;
-}
-.skills dd {
-  margin: 0;
-}
-
-.project + .project {
-  margin-top: 4px;
-}
-.project a,
-.contact a {
-  color: var(--accent);
-}
-.edu p + p {
+.skills p + p {
   margin-top: 1px;
+}
+.details {
+  font-size: 9.6pt;
 }
 
 @media (max-width: 640px) {
   body {
-    font-size: 10.5pt;
     background: #fff;
   }
   .page {
@@ -194,8 +177,8 @@ li::marker {
   .toolbar {
     padding: 14px 16px;
   }
-  .skills div {
-    grid-template-columns: 1fr;
+  .row {
+    flex-direction: column;
     gap: 0;
   }
 }
@@ -212,17 +195,5 @@ li::marker {
     margin: 0;
     padding: 0;
     box-shadow: none;
-  }
-  .contact a {
-    color: var(--muted);
-  }
-  a {
-    text-decoration: none !important;
-  }
-  .job,
-  .roleblock,
-  .project,
-  .edu {
-    break-inside: avoid;
   }
 }

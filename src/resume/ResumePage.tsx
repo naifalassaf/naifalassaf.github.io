@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, type ReactNode } from 'react'
 import { formatPeriod, projectsFor, resume, runs } from '../data/resume'
 
 const { basics, experience, skills, education } = resume
@@ -9,9 +9,23 @@ const Rich = ({ text }: { text: string }) => (
   </>
 )
 
+/** A LaTeX-style \resumeSubheading row: left text, right text flush to the margin. */
+const Row = ({ left, right, className = '' }: { left: ReactNode; right?: ReactNode; className?: string }) => (
+  <div className={`row ${className}`}>
+    <span>{left}</span>
+    {right && <span className="right">{right}</span>}
+  </div>
+)
+
 export const PDF_PATH = '/Naif-Alassaf-Resume.pdf'
 
 export default function ResumePage() {
+  const contact: ReactNode[] = [
+    basics.phone && <a href={`tel:${basics.phone.replace(/\s/g, '')}`}>{basics.phone}</a>,
+    <a href={`mailto:${basics.email}`}>{basics.email}</a>,
+    ...basics.links.map((l) => <a href={l.url}>{l.label}</a>),
+  ].filter(Boolean)
+
   return (
     <>
       {/* screen-only toolbar; hidden in print and in the generated PDF */}
@@ -25,17 +39,16 @@ export default function ResumePage() {
       <article className="page">
         <header>
           <h1>{basics.name}</h1>
-          <p className="role">{basics.title}</p>
+          {/* real spaces around each separator, so the line can wrap between items */}
           <p className="contact">
-            <span>{basics.location}</span>
-            {basics.phone && <a href={`tel:${basics.phone.replace(/\s/g, '')}`}>{basics.phone}</a>}
-            <a href={`mailto:${basics.email}`}>{basics.email}</a>
-            {basics.links.map((l) => (
-              <a key={l.url} href={l.url}>
-                {l.label}
-              </a>
+            {contact.map((c, i) => (
+              <Fragment key={i}>
+                {i > 0 && <span className="sep"> | </span>}
+                <span className="item">{c}</span>
+              </Fragment>
             ))}
           </p>
+          <p className="location">{basics.location}</p>
         </header>
 
         <section>
@@ -48,19 +61,20 @@ export default function ResumePage() {
         <section>
           <h2>Experience</h2>
           {experience.map((job) => (
-            <div className="job" key={job.company}>
-              <p className="org">
-                <strong>{job.company}</strong>
-                {job.program && <span> · {job.program}</span>}
-                {job.location && <span className="muted"> — {job.location}</span>}
-              </p>
+            <div className="entry" key={job.company}>
+              <Row left={<strong>{job.company}</strong>} right={job.location ?? job.program} />
               {job.roles.map((role) => (
-                <div className="roleblock" key={role.title}>
-                  <p className="rolehead">
-                    <strong>{role.title}</strong>
-                    {role.note && <em className="muted"> ({role.note})</em>}
-                    <span className="date">{formatPeriod(role.start, role.end)}</span>
-                  </p>
+                <div className="role" key={role.title}>
+                  <Row
+                    className="sub"
+                    left={
+                      <>
+                        {role.title}
+                        {role.note && <span className="note"> ({role.note})</span>}
+                      </>
+                    }
+                    right={formatPeriod(role.start, role.end, '–')}
+                  />
                   <ul>
                     {role.highlights.map((h) => (
                       <li key={h}>
@@ -75,51 +89,45 @@ export default function ResumePage() {
         </section>
 
         <section>
-          <h2>Skills</h2>
-          <dl className="skills">
-            {skills.map((g) => (
-              <div key={g.category}>
-                <dt>{g.category}</dt>
-                <dd>{g.items.join(', ')}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
-
-        <section>
           <h2>Projects</h2>
           {projectsFor('resume').map((p) => (
-            <div className="project" key={p.name}>
-              <p>
-                <strong>{p.name}</strong>
-                {p.status && <em className="muted"> ({p.status})</em>}
-                {p.github && (
+            <div className="entry project" key={p.name}>
+              <Row
+                left={
                   <>
-                    {' · '}
-                    <a href={p.github}>GitHub</a>
+                    <strong>{p.name}</strong>
+                    {p.status && <em> ({p.status})</em>}
                   </>
-                )}
-              </p>
-              <p>
-                <Rich text={p.description} />
-              </p>
+                }
+                right={p.github && <a href={p.github}>GitHub</a>}
+              />
+              <ul>
+                <li>
+                  <Rich text={p.description} />
+                </li>
+              </ul>
             </div>
           ))}
         </section>
 
         <section>
+          <h2>Technical Skills</h2>
+          <div className="skills">
+            {skills.map((g) => (
+              <p key={g.category}>
+                <strong>{g.category}</strong>: {g.items.join(', ')}
+              </p>
+            ))}
+          </div>
+        </section>
+
+        <section>
           <h2>Education</h2>
           {education.map((e) => (
-            <div className="edu" key={e.school}>
-              <p className="rolehead">
-                <strong>{e.school}</strong>
-                <span className="muted"> — {e.location}</span>
-                <span className="date">
-                  {e.start} – {e.end}
-                </span>
-              </p>
-              <p>{e.degree}</p>
-              {e.details && <p className="muted">{e.details}</p>}
+            <div className="entry" key={e.school}>
+              <Row left={<strong>{e.school}</strong>} right={e.location} />
+              <Row className="sub" left={e.degree} right={`${e.start} – ${e.end}`} />
+              {e.details && <p className="details">{e.details}</p>}
             </div>
           ))}
         </section>
