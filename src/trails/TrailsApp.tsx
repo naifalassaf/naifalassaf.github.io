@@ -60,6 +60,14 @@ export default function TrailsApp() {
       .catch(() => setRoutes({}))
   }, [])
 
+  // a ?trail= link: bring its entry into view in the list too
+  useEffect(() => {
+    // desktop only: on phones the map sits above the list and should stay in view
+    if (selected && matchMedia('(min-width: 901px)').matches)
+      document.getElementById(`trail-${selected}`)?.scrollIntoView({ block: 'center' })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   useEffect(() => {
     document.documentElement.lang = lang
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'

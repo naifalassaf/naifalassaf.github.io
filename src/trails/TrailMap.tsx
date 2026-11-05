@@ -4,6 +4,9 @@ import 'leaflet/dist/leaflet.css'
 import { useTranslation } from 'react-i18next'
 import type { Lang, Routes, Trail } from './types'
 import { duration, num, pick } from './format'
+import { googleSatellite } from './googleSatellite'
+
+const GOOGLE_KEY = import.meta.env.VITE_GOOGLE_MAPS_KEY
 
 interface Props {
   trails: Trail[]
@@ -33,7 +36,7 @@ export default function TrailMap({ trails, visible, selected, routes, onSelect }
   const markers = useRef(new Map<string, L.Marker>())
   const lines = useRef(new Map<string, L.Polyline>())
   const controls = useRef<L.Control[]>([])
-  const base = useRef<{ sat: L.TileLayer; topo: L.TileLayer } | null>(null)
+  const [base, setBase] = useState<{ sat: L.TileLayer; topo: L.TileLayer } | null>(null)
   const onSelectRef = useRef(onSelect)
   onSelectRef.current = onSelect
   const [ready, setReady] = useState(false)
@@ -42,23 +45,41 @@ export default function TrailMap({ trails, visible, selected, routes, onSelect }
   /* map, once */
   useEffect(() => {
     if (!el.current || map.current) return
-    const m = L.map(el.current, { zoomControl: true, attributionControl: true }).setView([24.6, 44.5], 6)
-    const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 18,
+    const m = L.map(el.current, { zoomControl: true, attributionControl: true, maxZoom: 20 }).setView([24.6, 44.5], 6)
+    // Esri is the fallback when there's no Google key or Google fails. In remote Saudi areas
+    // it only has imagery to zoom 17, so deeper zooms enlarge those tiles instead of going blank.
+    const esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 20,
+      maxNativeZoom: 17,
       attribution: 'Imagery &copy; Esri',
     }).addTo(m)
     const topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-      maxZoom: 17,
-      attribution: '&copy; OpenTopoMap (CC-BY-SA), &copy; OpenStreetMap',
+      maxZoom: 20,
+      maxNativeZoom: 17,
+      attribution: '&copy; <a href="https://opentopomap.org" target="_blank" rel="noopener">OpenTopoMap</a> (CC-BY-SA), &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
     })
     m.attributionControl.setPrefix(false)
-    base.current = { sat, topo }
+    setBase({ sat: esri, topo })
     map.current = m
+    let gone = false
+    if (GOOGLE_KEY) {
+      googleSatellite(GOOGLE_KEY)
+        .then((g) => {
+          if (gone) return
+          if (m.hasLayer(esri)) {
+            m.removeLayer(esri)
+            g.addTo(m)
+          }
+          setBase({ sat: g, topo })
+        })
+        .catch((err) => console.warn('Google satellite unavailable, using Esri:', err))
+    }
     // the stacked mobile layout and window resizes change the map's size under Leaflet
     const ro = new ResizeObserver(() => m.invalidateSize())
     ro.observe(el.current)
     setReady(true)
     return () => {
+      gone = true
       ro.disconnect()
       m.remove()
       map.current = null
@@ -68,9 +89,9 @@ export default function TrailMap({ trails, visible, selected, routes, onSelect }
   /* controls and Source credit, in the current language */
   useEffect(() => {
     const m = map.current
-    if (!m || !base.current) return
+    if (!m || !base) return
     controls.current.forEach((c) => c.remove())
-    const layers = L.control.layers({ [t('layers.sat')]: base.current.sat, [t('layers.topo')]: base.current.topo }, {}, { position: 'topleft' })
+    const layers = L.control.layers({ [t('layers.sat')]: base.sat, [t('layers.topo')]: base.topo }, {}, { position: 'topleft' })
     const legend = new L.Control({ position: 'bottomleft' })
     legend.onAdd = () => {
       const d = L.DomUtil.create('div', 'legend')
@@ -88,7 +109,7 @@ export default function TrailMap({ trails, visible, selected, routes, onSelect }
     return () => {
       m.attributionControl.removeAttribution(credit)
     }
-  }, [ready, lang, t])
+  }, [ready, base, lang, t])
 
   /* markers and routes, built per language (popups are text) */
   useEffect(() => {
@@ -144,11 +165,15 @@ export default function TrailMap({ trails, visible, selected, routes, onSelect }
     if (!pts.length) return
     const b = L.latLngBounds(pts).pad(0.25)
     if (first.current) {
+      // first paint: show everything, unless a ?trail= link already picked one to fly to
       first.current = false
-      m.fitBounds(b, { maxZoom: 11 })
+      if (!selected) m.fitBounds(b, { maxZoom: 11 })
+      else m.setView(b.getCenter(), 6)
     } else m.flyToBounds(b, { duration: 0.7, maxZoom: 11 })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visKey, ready])
+  }, [visKey])
+
+  const routesLoaded = Object.keys(routes).length > 0
 
   /* fly to the selected Trail */
   useEffect(() => {
@@ -156,10 +181,12 @@ export default function TrailMap({ trails, visible, selected, routes, onSelect }
     if (!m || !selected) return
     const pl = lines.current.get(selected)
     const mk = markers.current.get(selected)
-    if (pl && m.hasLayer(pl)) m.flyToBounds(pl.getBounds().pad(0.2), { duration: 0.9, maxZoom: 15 })
+    if (pl && m.hasLayer(pl)) m.flyToBounds(pl.getBounds().pad(0.2), { duration: 0.9, maxZoom: 17 })
     else if (mk) m.flyTo(mk.getLatLng(), 13, { duration: 0.9 })
     if (mk && m.hasLayer(mk)) setTimeout(() => mk.openPopup(), 950)
-  }, [selected])
+    // re-run once the Routes arrive, so a ?trail= link frames the whole Route
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected, routesLoaded])
 
   return (
     <div id="map" ref={el} dir="ltr" role="region" aria-label={t('title')} />

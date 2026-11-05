@@ -544,3 +544,12 @@ html[lang='en'] .legend {
     border-top: 1px solid var(--hairline);
   }
 }
+
+.google-logo {
+  display: block;
+  line-height: 0;
+  margin: 0 6px 2px 0 !important;
+}
+.google-logo img {
+  display: block;
+}
