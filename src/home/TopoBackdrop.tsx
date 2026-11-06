@@ -13,7 +13,7 @@ const drift = (depth: number) => ({
   transition: 'transform 0.6s ease-out',
 })
 
-/** Contour rings of an imagined Tuwaiq ridge, drifting gently with the cursor. */
+/** Decorative contour rings (generated, not a real map), drifting gently with the cursor. The summit label is Riyadh's elevation, 612 m. */
 export default function TopoBackdrop() {
   const ref = useRef<SVGSVGElement>(null)
 
@@ -59,7 +59,7 @@ export default function TopoBackdrop() {
       <g style={drift(28)}>
         <path d="M980 288 l9 15 h-18 z" fill="var(--accent)" />
         <text x="996" y="303" className="mono" fontSize="12" fill="var(--muted)">
-          967 m
+          612 m
         </text>
       </g>
     </svg>
