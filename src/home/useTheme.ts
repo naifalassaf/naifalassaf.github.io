@@ -9,8 +9,18 @@ const root = document.documentElement
 const systemDark = () => matchMedia('(prefers-color-scheme: dark)').matches
 const isDark = () => (root.dataset.theme ? root.dataset.theme === 'dark' : systemDark())
 
+/** The tab icon follows a pinned choice; unpinned, favicon.svg follows the OS by itself. */
+function syncFavicon() {
+  const link = document.getElementById('favicon') as HTMLLinkElement | null
+  if (!link) return
+  const pinned = root.dataset.theme
+  link.href = pinned === 'dark' ? '/favicon-dark.svg' : pinned === 'light' ? '/favicon-light.svg' : '/favicon.svg'
+}
+
 export function useTheme() {
   const [dark, setDark] = useState(isDark)
+
+  useEffect(syncFavicon, [])
 
   useEffect(() => {
     const m = matchMedia('(prefers-color-scheme: dark)')
@@ -22,6 +32,7 @@ export function useTheme() {
   const toggle = () => {
     const next = isDark() ? 'light' : 'dark'
     root.dataset.theme = next
+    syncFavicon()
     try {
       localStorage.setItem(KEY, next)
     } catch {

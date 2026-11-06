@@ -1,5 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- "NA" monogram: the navbar's cyan initials on the site's dark slate -->
-  <rect width="32" height="32" rx="7" fill="#0f172a"/>
-  <path d="M5.5 23V9l8 14V9M17.5 23 22 9l4.5 14M19 18.5h6" fill="none" stroke="#22d3ee" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- "NA" monogram in the home page palette: burnt orange on paper, or on desert night in dark mode -->
+  <style>
+    .bg { fill: #f4f0e8; stroke: #1b1a17; stroke-opacity: .16 } .na { stroke: #c2410c }
+    @media (prefers-color-scheme: dark) { .bg { fill: #171412; stroke: none } .na { stroke: #ec7f4b } }
+  </style>
+  <rect class="bg" x=".5" y=".5" width="31" height="31" rx="6.5"/>
+  <path d="M5.5 23V9l8 14V9M17.5 23 22 9l4.5 14M19 18.5h6" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" class="na"/>
 </svg>

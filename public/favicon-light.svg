@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- "NA" monogram, Day theme (the home page swaps to this when Day is picked) -->
+  <rect x=".5" y=".5" width="31" height="31" rx="6.5" fill="#f4f0e8" stroke="#1b1a17" stroke-opacity=".16"/>
+  <path d="M5.5 23V9l8 14V9M17.5 23 22 9l4.5 14M19 18.5h6" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" stroke="#c2410c"/>
+</svg>
