@@ -52,7 +52,7 @@ function Hero() {
         </nav>
         <div className="mt-auto pb-16 max-w-2xl">
           <p className="mono text-xs" style={{ color: 'var(--muted)' }}>
-            24.633° N · 46.717° E — {basics.location}
+            24.633° N · 46.717° E · {basics.location}
           </p>
           <h1 className="mt-4 text-[clamp(2.75rem,7vw,5.5rem)] font-bold leading-[0.98] tracking-tight">{basics.name}</h1>
           <p className="mt-3 text-2xl font-medium" style={{ color: 'var(--accent)' }}>

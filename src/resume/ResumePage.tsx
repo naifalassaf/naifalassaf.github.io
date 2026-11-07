@@ -81,7 +81,7 @@ export default function ResumePage() {
                         {role.note && <span className="note"> ({role.note})</span>}
                       </>
                     }
-                    right={formatPeriod(role.start, role.end, '–')}
+                    right={formatPeriod(role.start, role.end, 'to')}
                   />
                   <ul>
                     {role.highlights.map((h) => (
@@ -119,7 +119,7 @@ export default function ResumePage() {
         </section>
 
         <section>
-          <h2>Technical Skills</h2>
+          <h2>Skills</h2>
           <div className="skills">
             {skills.map((g) => (
               <p key={g.category}>
@@ -134,7 +134,7 @@ export default function ResumePage() {
           {education.map((e) => (
             <div className="entry" key={e.school}>
               <Row left={<strong>{e.school}</strong>} right={e.location} />
-              <Row className="sub" left={e.degree} right={`${e.start} – ${e.end}`} />
+              <Row className="sub" left={e.degree} right={`${e.start} to ${e.end}`} />
               {e.details && <p className="details">{e.details}</p>}
             </div>
           ))}

@@ -10,7 +10,7 @@
       { "label": "github.com/naifalassaf", "url": "https://github.com/naifalassaf", "kind": "github" },
       { "label": "naifalassaf.sa", "url": "https://naifalassaf.sa", "kind": "website" }
     ],
-    "summary": "Senior front-end engineer with four years building production interfaces for enterprise and government clients, now focused on putting AI-assisted development to work inside real team workflows. Shipped an accessibility toolkit saving over SAR 500,000 a year and cut ticket turnaround from one week to 1.5 days through custom agent tooling. Deep in React and TypeScript; fast on new stacks — picked up Flutter and shipped team features within a week."
+    "summary": "Senior front-end engineer with four years of experience building production interfaces for government and enterprise clients in React and TypeScript. I lead AI-assisted development on my team, which cut ticket turnaround from one week to 1.5 days, and I built an accessibility toolkit that saves over SAR 500,000 a year."
   },
   "experience": [
     {
@@ -24,12 +24,10 @@
           "start": "2025-01",
           "end": null,
           "highlights": [
-            "Built an accessibility compliance toolkit adopted across departmental domains, cutting remediation cost by SAR 70,000 per domain — over SAR 500,000 in annual savings. Delivered in one week using AI-assisted development.",
-            "Established AI-assisted development practice for the front-end team: authored custom agent skills that automate repetitive implementation work and integrated MCP servers into the development workflow, cutting ticket turnaround from one week to roughly 1.5 days.",
-            "Designed an executive dashboard visualizing cybersecurity events across Saudi Arabia, rendering a live timeline of 300+ events per minute for leadership.",
-            "Built a dynamic form builder reused across multiple front-end projects, supporting varied input types, validation rules, and conditional logic — removing repeated form work from every new build.",
-            "Developed a cross-platform mobile application in Flutter with reusable components and clean architecture, shipping production features within the first week of picking up Dart.",
-            "Expanded automation across build, testing, and deployment, and led internal technical discussions that aligned the team on front-end standards."
+            "Design front-end solutions for government cybersecurity platforms and build them in React and TypeScript, including dashboards, workflow tools, and mobile features in Flutter.",
+            "Review the team's code, run technical assessments, and mentor junior engineers.",
+            "Bring AI-assisted development into the team's daily work with custom agent skills and MCP servers, and lead the discussions that set our front-end standards.",
+            "Automate build, test, and deploy steps for the front-end projects."
           ]
         },
         {
@@ -37,10 +35,10 @@
           "start": "2022-12",
           "end": "2025-01",
           "highlights": [
-            "Built pages, components, and internal tools for client projects in React and Ant Design.",
-            "Developed interactive dashboards with Apache ECharts surfacing insights from user behavior data.",
-            "Wrote end-to-end automated tests covering critical user flows.",
-            "Acted as the front-end voice in project scoping and technical planning."
+            "Built pages, components, and internal tools for enterprise and government client projects in React, TypeScript, and Ant Design.",
+            "Built interactive Apache ECharts dashboards that show request throughput and user behavior.",
+            "Wrote end-to-end tests for critical user flows to catch regressions before release.",
+            "Represented the front end in project scoping and technical planning."
           ]
         }
       ]
@@ -57,36 +55,67 @@
           "start": "2022-10",
           "end": "2022-12",
           "highlights": [
-            "Implemented bug fixes and enhancements to user dashboards and mobile apps.",
-            "Tested web and mobile features, creating tickets for improvements.",
-            "Reviewed production code to maintain quality standards."
+            "Fixed bugs and made improvements to user dashboards and mobile apps.",
+            "Tested web and mobile features and filed tickets for improvements.",
+            "Reviewed production code for quality."
           ]
         }
       ]
     }
   ],
   "skills": [
-    { "category": "Languages", "items": ["TypeScript", "JavaScript", "Dart"] },
-    { "category": "Frameworks & Libraries", "items": ["React", "Ant Design", "Flutter", "Apache ECharts"] },
     {
-      "category": "AI & Agentic",
+      "category": "Technical skills",
       "items": [
-        "Custom agent skills",
-        "MCP servers",
-        "AI-assisted development workflows",
-        "reliability and verification patterns for generated code"
+        "React", "TypeScript", "JavaScript", "Flutter", "Dart", "Tailwind CSS", "Vite", "Ant Design", "Apache ECharts",
+        "MCP servers", "AI agents", "Docker", "OpenShift", "Camunda 7", "Git", "E2E testing", "Web accessibility", "UI/UX design", "Agile"
       ]
     },
-    { "category": "Tools", "items": ["Camunda 7", "Git"] },
-    { "category": "Practices", "items": ["Agile", "E2E testing", "web accessibility", "UI/UX design"] }
+    { "category": "Soft skills", "items": ["Communication", "Leadership", "Problem solving"] }
   ],
   "projects": [
     {
       "name": "Saudi Trails",
-      "description": "A bilingual (Arabic-first) map of hiking trails across Saudi Arabia, bringing together the King Salman Royal Reserve and the Darb association. Search and filter 39 trails by source, region and difficulty, and see their full routes on satellite or terrain maps. Darb trails refresh weekly at build time from its public data; every trail is credited and linked to its official page.",
+      "description": "An Arabic-first, bilingual map of 39 hiking trails across Saudi Arabia from the King Salman Royal Reserve and the Darb association. Filter by source, region, and difficulty, and view each route on satellite or terrain maps. A weekly build pulls Darb's public data, and every trail links to its official page.",
       "tags": ["React", "TypeScript", "Leaflet", "i18n · RTL", "Personal"],
       "demo": "/trails",
       "theme": "sunset",
+      "showOn": ["site"]
+    },
+    {
+      "name": "AI-assisted development workflow",
+      "description": "Set up AI-assisted development for the front-end team. Wrote custom agent skills that automate repetitive implementation work and connected MCP servers to the team's tools, which cut ticket turnaround from one week to about 1.5 days.",
+      "tags": ["Agent skills", "MCP", "AI agents"],
+      "showOn": ["site", "resume"]
+    },
+    {
+      "name": "Accessibility compliance toolkit",
+      "description": "Used across departmental domains. Cuts remediation cost by SAR 70,000 per domain, over SAR 500,000 a year. Built in one week with AI-assisted development.",
+      "tags": ["Accessibility", "TypeScript", "AI-assisted"],
+      "showOn": ["site", "resume"]
+    },
+    {
+      "name": "Haseen",
+      "description": "Saudi Arabia's national portal for cybersecurity services, with 2,500+ registered entities, 7,000+ users, and 34 e-services. Worked on several of its platforms. Built the front end of its Camunda 7 request management system, which replaced a process run over email and spreadsheets and has dashboards for request throughput and user behavior.",
+      "tags": ["React", "TypeScript", "Camunda 7", "ECharts", "Ant Design"],
+      "showOn": ["site", "resume"]
+    },
+    {
+      "name": "Cybersecurity events dashboard",
+      "description": "Designed an executive dashboard for leadership with a live timeline of 300+ cybersecurity events per minute across Saudi Arabia.",
+      "tags": ["React", "TypeScript", "Data visualization"],
+      "showOn": ["site", "resume"]
+    },
+    {
+      "name": "Global Cybersecurity Forum app",
+      "description": "Built features for the GCF mobile app in Flutter and Dart with reusable components, and shipped the first one to production within a week of learning Dart.",
+      "tags": ["Flutter", "Dart", "Mobile"],
+      "showOn": ["site", "resume"]
+    },
+    {
+      "name": "Form builder",
+      "description": "A form builder that several front-end projects reuse. It handles many input types, validation rules, and conditional fields, so new projects no longer rebuild forms from scratch.",
+      "tags": ["React", "TypeScript"],
       "showOn": ["site"]
     },
     {
@@ -97,23 +126,16 @@
       "showOn": ["resume"]
     },
     {
-      "name": "Request management system — front end",
-      "siteName": "Request Management System",
-      "description": "Front end for a workflow product built on Camunda 7, replacing a process previously run over email and spreadsheets. Includes interactive dashboards surfacing request throughput and user behavior.",
-      "tags": ["React", "TypeScript", "Camunda 7", "ECharts", "Ant Design"],
-      "showOn": ["site", "resume"]
-    },
-    {
-      "name": "CRD mobile application — CU Boulder Correll Lab",
-      "siteName": "CRD App — CU Boulder Psychology Dept.",
-      "description": "Updated and gamified the Psychology Department's Cross Racial Deficit research app. Streamlined deployment, wrote documentation, and redesigned the UI.",
+      "name": "CRD mobile app, CU Boulder Correll Lab",
+      "siteName": "CRD App, CU Boulder Psychology Department",
+      "description": "Updated the Psychology Department's Cross Racial Deficit research app and added game elements. Simplified deployment, wrote documentation, and redesigned the UI.",
       "tags": ["Mobile", "UI/UX", "CI/CD", "Agile", "Documentation"],
       "github": "https://github.com/naifalassaf",
-      "showOn": ["site", "resume"]
+      "showOn": ["site"]
     },
     {
       "name": "Eidiyah",
-      "description": "A gift exchange randomizer built for Eid celebrations. Enter your participants, optionally mark connection constraints (pairs who should not gift each other), and get a valid random assignment instantly. Built with React and TypeScript.",
+      "description": "A gift exchange randomizer for Eid. Enter the participants, mark any pairs who shouldn't gift each other, and get a random assignment that follows those rules.",
       "tags": ["React", "TypeScript", "Personal"],
       "demo": "/eidiyah",
       "showOn": ["site"]
@@ -130,6 +152,6 @@
     }
   ],
   "site": {
-    "offTheClock": "Outside of code, I enjoy cooking, tabletop games, camping, hiking, astronomy, and storytelling."
+    "offTheClock": "Outside of work I cook, play tabletop games, camp, hike, stargaze, and tell stories."
   }
 }
