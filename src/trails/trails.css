@@ -9,8 +9,9 @@
   --samar-500: #5f6f4e;
   --sunset-600: #c4652f;
   --hairline: #c9b997;
-  --sans: 'IBM Plex Sans Arabic', 'IBM Plex Sans', system-ui, sans-serif;
-  --latin: 'IBM Plex Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  /* Tajawal covers both scripts; it has no 600, so the 600s render at its 700 */
+  --sans: 'Tajawal', system-ui, sans-serif;
+  --latin: 'Tajawal', system-ui, sans-serif;
   --space-1: 8px;
   --space-2: 16px;
   --space-3: 24px;
