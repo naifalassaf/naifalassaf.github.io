@@ -35,6 +35,9 @@ jobs:
         # keeps the committed data if Darb is unreachable, so this never blocks a deploy
         run: npm run trails:data
 
+      - name: Test
+        run: npm test
+
       - name: Build
         run: npm run build
         env:

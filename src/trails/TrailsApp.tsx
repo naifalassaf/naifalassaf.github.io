@@ -4,14 +4,17 @@ import data from './data/trails.json'
 import TrailMap from './TrailMap'
 import { LOCKUP_SVG } from './lockup'
 import { rememberLang } from './i18n'
-import { difficultyRank, duration, fold, haystack, num, pick } from './format'
+import { difficultyRank, duration, fold, haystack, km, num, pick } from './format'
+import { useMyLocation } from './useMyLocation'
 import type { Difficulty, Lang, Routes, SourceId, Trail, TrailData } from './types'
 
 const DATA = data as unknown as TrailData
-const TRAILS = DATA.trails
-const SOURCES: SourceId[] = ['ksrnr', 'darb']
+/** KSRNR and Asir stay hidden unless the page is opened with ?dev=true (hidden, not secret: the data ships either way) */
+const DEV = new URLSearchParams(location.search).get('dev') === 'true'
+const SOURCES: SourceId[] = DEV ? ['ksrnr', 'darb', 'asir'] : ['darb']
+const TRAILS = DATA.trails.filter((t) => SOURCES.includes(t.source))
 const LEVELS: Difficulty[] = ['easy', 'moderate', 'hard']
-type Sort = 'default' | 'short' | 'long' | 'easy'
+type Sort = 'default' | 'short' | 'long' | 'easy' | 'near'
 
 const Icon = {
   dist: <path d="M3 12h18M4 7v10M20 7v10" />,
@@ -52,15 +55,27 @@ export default function TrailsApp() {
   const [lvl, setLvl] = useState<Difficulty | null>(null)
   const [sort, setSort] = useState<Sort>('default')
   const [selected, setSelected] = useState<string | null>(initialTrail)
-  // phones only: the region/difficulty/sort controls fold behind a Filters button
+  // Source, region and difficulty fold behind an Advanced search button
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const me = useMyLocation()
+  // the distance sort was picked and is waiting on a first fix, or couldn't get one
+  const [nearState, setNearState] = useState<'idle' | 'locating' | 'failed'>('idle')
 
   useEffect(() => {
     fetch("/data/trail-routes.json")
       .then((r) => (r.ok ? r.json() : {}))
-      .then(setRoutes)
+      .then((r: Routes) => setRoutes(Object.fromEntries(Object.entries(r).filter(([id]) => TRAILS.some((t) => t.id === id)))))
       .catch(() => setRoutes({}))
   }, [])
+
+  const chooseSort = async (next: Sort) => {
+    setSort(next)
+    setNearState('idle')
+    if (next !== 'near' || me.pos) return
+    setNearState('locating')
+    const r = await me.locateOnce()
+    setNearState(Array.isArray(r) ? 'idle' : 'failed')
+  }
 
   // a ?trail= link: bring its entry into view in the list too
   useEffect(() => {
@@ -108,8 +123,12 @@ export default function TrailsApp() {
     if (sort === 'short') list.sort((a, b) => len(a, 1) - len(b, 1))
     if (sort === 'long') list.sort((a, b) => len(a, -1) - len(b, -1))
     if (sort === 'easy') list.sort((a, b) => difficultyRank(a) - difficultyRank(b) || len(a, 1) - len(b, 1))
+    if (sort === 'near' && me.pos) {
+      const away = (tr: Trail) => (tr.start ? km(me.pos!, tr.start) : Infinity)
+      list.sort((a, b) => away(a) - away(b))
+    }
     return list
-  }, [q, src, reg, lvl, sort])
+  }, [q, src, reg, lvl, sort, me.pos])
 
   const visible = useMemo(() => new Set(shown.map((x) => x.id)), [shown])
   const mapped = shown.filter((x) => x.start).length
@@ -120,12 +139,11 @@ export default function TrailsApp() {
     return d ? new Date(d + 'T12:00:00Z').toLocaleDateString(lang === 'ar' ? 'ar-SA-u-nu-latn-ca-gregory' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : '—'
   }
   const anyOurs = TRAILS.some((x) => x.nameEnOurs)
-  const active = [src, reg, lvl].filter(Boolean).length + (sort === 'default' ? 0 : 1)
+  const active = [src, reg, lvl].filter(Boolean).length
   const clearFilters = () => {
     setSrc(null)
     setReg(null)
     setLvl(null)
-    setSort('default')
   }
 
   return (
@@ -175,37 +193,54 @@ export default function TrailsApp() {
             </button>
           </div>
           <div id="filter-more" className={`more${filtersOpen ? ' open' : ''}`}>
-          <Chips label={t('filters.source')} all={t('filters.all')} value={src} onChange={setSrc} options={SOURCES.map((s) => [s, t(`source.${s}`)])} />
-          <Chips label={t('filters.region')} all={t('filters.all')} value={reg} onChange={setReg} options={regions.map((r) => [r.ar, pick(r, lang)])} />
-          <Chips label={t('filters.difficulty')} all={t('filters.all')} value={lvl} onChange={setLvl} options={LEVELS.map((d) => [d, t(`difficulty.${d}`)])} />
+            {SOURCES.length > 1 && (
+              <Chips label={t('filters.source')} all={t('filters.all')} value={src} onChange={setSrc} options={SOURCES.map((s) => [s, t(`source.${s}`)])} />
+            )}
+            <Chips label={t('filters.region')} all={t('filters.all')} value={reg} onChange={setReg} options={regions.map((r) => [r.ar, pick(r, lang)])} />
+            <Chips label={t('filters.difficulty')} all={t('filters.all')} value={lvl} onChange={setLvl} options={LEVELS.map((d) => [d, t(`difficulty.${d}`)])} />
+            {active > 0 && (
+              <button type="button" className="clear" onClick={clearFilters}>
+                {t('filters.clear')}
+              </button>
+            )}
+          </div>
           <label className="sort">
             <span className="label">{t('filters.sort')}</span>
-            <select value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
-              <option value="default">{t('filters.sortDefault')}</option>
+            <select value={sort} onChange={(e) => chooseSort(e.target.value as Sort)}>
+              <option value="default">{t(SOURCES.length > 1 ? 'filters.sortDefault' : 'filters.sortPlain')}</option>
+              <option value="near">{t('filters.sortNear')}</option>
               <option value="short">{t('filters.sortShort')}</option>
               <option value="long">{t('filters.sortLong')}</option>
               <option value="easy">{t('filters.sortEasy')}</option>
             </select>
           </label>
-          {active > 0 && (
-            <button type="button" className="clear" onClick={clearFilters}>
-              {t('filters.clear')}
-            </button>
+          {sort === 'near' && nearState !== 'idle' && (
+            <p className="note" role="status">
+              {t(nearState === 'locating' ? 'filters.locating' : 'filters.noLocation')}
+            </p>
           )}
-          </div>
         </div>
 
         <div id="list">
           {shown.length === 0 && <p className="empty">{t('empty')}</p>}
           {shown.map((tr) => (
-            <TrailItem key={tr.id} tr={tr} lang={lang} on={tr.id === selected} hasRoute={Boolean(routes[tr.id]?.length)} onSelect={() => select(tr.id)} />
+            <TrailItem
+              key={tr.id}
+              tr={tr}
+              lang={lang}
+              on={tr.id === selected}
+              hasRoute={Boolean(routes[tr.id]?.length)}
+              awayKm={sort === 'near' && me.pos && tr.start ? km(me.pos, tr.start) : null}
+              onSelect={() => select(tr.id)}
+            />
           ))}
         </div>
 
         <footer className="colophon">
           <h3>{t('about.heading')}</h3>
-          <p dangerouslySetInnerHTML={{ __html: t('about.ksrnr', { count: num(lang, count('ksrnr')), date: date('ksrnr') }) }} />
-          <p dangerouslySetInnerHTML={{ __html: t('about.darb', { count: num(lang, count('darb')), date: date('darb') }) }} />
+          {SOURCES.map((s) => (
+            <p key={s} dangerouslySetInnerHTML={{ __html: t(`about.${s}`, { count: num(lang, count(s)), date: date(s) }) }} />
+          ))}
           <p>{t('about.gaps')}</p>
           {lang === 'en' && anyOurs && <p>{t('about.oursEn')}</p>}
           <p>{t('about.unofficial')}</p>
@@ -213,7 +248,7 @@ export default function TrailsApp() {
         </footer>
       </aside>
 
-      <TrailMap trails={TRAILS} visible={visible} selected={selected} routes={routes} onSelect={select} />
+      <TrailMap trails={TRAILS} visible={visible} selected={selected} routes={routes} onSelect={select} me={me} />
     </div>
   )
 }
@@ -243,7 +278,8 @@ function Chips<V extends string>(props: {
   )
 }
 
-function TrailItem({ tr, lang, on, hasRoute, onSelect }: { tr: Trail; lang: Lang; on: boolean; hasRoute: boolean; onSelect: () => void }) {
+function TrailItem(props: { tr: Trail; lang: Lang; on: boolean; hasRoute: boolean; awayKm: number | null; onSelect: () => void }) {
+  const { tr, lang, on, hasRoute, awayKm, onSelect } = props
   const { t } = useTranslation()
   const other: Lang = lang === 'ar' ? 'en' : 'ar'
   const secondary = tr.name[other]
@@ -280,6 +316,13 @@ function TrailItem({ tr, lang, on, hasRoute, onSelect }: { tr: Trail; lang: Lang
         <span className="src">{t(`source.${tr.source}`)}</span> · {place}
       </p>
       <div className="data">
+        {awayKm != null && (
+          <i title={t('stat.away')}>
+            <span className="u">⌖</span>
+            {num(lang, awayKm, awayKm < 10 ? 1 : 0)}
+            <span className="u">{t('unit.km')}</span>
+          </i>
+        )}
         {tr.lengthKm != null && (
           <i title={t('stat.length')}>
             <Svg k="dist" />

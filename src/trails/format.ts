@@ -40,3 +40,14 @@ export function fold(s: string) {
 
 export const haystack = (t: Trail) =>
   fold([t.name.ar, t.name.en, t.region.ar, t.region.en, t.city?.ar, t.city?.en].filter(Boolean).join(' '))
+
+/** Escapes text for the HTML strings Leaflet takes (popups, legend). */
+export const esc = (s: string) =>
+  s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
+
+/** great-circle distance in km between two [lat, lon] points */
+export function km([la1, lo1]: [number, number], [la2, lo2]: [number, number]) {
+  const r = Math.PI / 180
+  const a = Math.sin(((la2 - la1) * r) / 2) ** 2 + Math.cos(la1 * r) * Math.cos(la2 * r) * Math.sin(((lo2 - lo1) * r) / 2) ** 2
+  return 12742 * Math.asin(Math.sqrt(a))
+}

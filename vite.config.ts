@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
@@ -34,6 +35,10 @@ function resumePdfInDev(): Plugin {
 export default defineConfig({
   plugins: [react(), resumePdfInDev()],
   base: '/',
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['src/test-setup.ts'],
+  },
   build: {
     rollupOptions: {
       input: {

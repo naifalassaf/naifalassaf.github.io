@@ -1,0 +1,424 @@
+{
+  "asOf": "2026-08-27",
+  "source": "Aseer Development Authority, Outdoor Activities Guide",
+  "trails": [
+    {
+      "id": "asir-razz",
+      "source": "asir",
+      "name": {
+        "ar": "مسار عقبة رز",
+        "en": "Aqabat Razz Trail"
+      },
+      "nameEnOurs": true,
+      "region": {
+        "ar": "عسير",
+        "en": "Asir"
+      },
+      "city": {
+        "ar": "رجال ألمع",
+        "en": "Rijal Almaa"
+      },
+      "lengthKm": 2.2,
+      "highM": null,
+      "lowM": null,
+      "gainM": null,
+      "duration": [
+        60,
+        60
+      ],
+      "difficulty": null,
+      "start": [
+        18.22162,
+        42.280219
+      ],
+      "end": [
+        18.212655,
+        42.273352
+      ],
+      "oneWay": true,
+      "page": {
+        "ar": "https://discoveraseer.com/booklet?type=outdoor&locale=ar",
+        "en": "https://discoveraseer.com/booklet?type=outdoor&locale=en"
+      },
+      "download": "https://drive.google.com/uc?export=download&id=1EEy_o_CowQ-W6VWW9P5zAorSadVwiJdT",
+      "routeFrom": "asda",
+      "hasRoute": true
+    },
+    {
+      "id": "asir-qouron",
+      "source": "asir",
+      "name": {
+        "ar": "مسار عقبة القرون",
+        "en": "Al-Qouron Trail"
+      },
+      "nameEnOurs": false,
+      "region": {
+        "ar": "عسير",
+        "en": "Asir"
+      },
+      "city": {
+        "ar": "السودة",
+        "en": "Al Soudah"
+      },
+      "lengthKm": 7,
+      "highM": null,
+      "lowM": null,
+      "gainM": null,
+      "duration": [
+        180,
+        480
+      ],
+      "difficulty": null,
+      "start": [
+        18.259815,
+        42.36587
+      ],
+      "end": [
+        18.250316,
+        42.328331
+      ],
+      "oneWay": true,
+      "page": {
+        "ar": "https://discoveraseer.com/booklet?type=outdoor&locale=ar",
+        "en": "https://discoveraseer.com/booklet?type=outdoor&locale=en"
+      },
+      "download": "https://drive.google.com/uc?export=download&id=1q5jUtD-wvuVPMsLc7w894vLgru_6tRu5",
+      "routeFrom": "wikiloc",
+      "hasRoute": true
+    },
+    {
+      "id": "asir-raydah",
+      "source": "asir",
+      "name": {
+        "ar": "مسار ريدة",
+        "en": "Raidah Trail"
+      },
+      "nameEnOurs": false,
+      "region": {
+        "ar": "عسير",
+        "en": "Asir"
+      },
+      "city": {
+        "ar": "النماص",
+        "en": "Al Namas"
+      },
+      "lengthKm": 4.4,
+      "highM": null,
+      "lowM": null,
+      "gainM": null,
+      "duration": [
+        120,
+        300
+      ],
+      "difficulty": null,
+      "start": [
+        19.166336,
+        42.096598
+      ],
+      "end": [
+        19.159944,
+        42.082939
+      ],
+      "oneWay": true,
+      "page": {
+        "ar": "https://discoveraseer.com/booklet?type=outdoor&locale=ar",
+        "en": "https://discoveraseer.com/booklet?type=outdoor&locale=en"
+      },
+      "download": "https://drive.google.com/uc?export=download&id=1VFvBFoeptpFLzX9dAjSJnKP_0QIxBIWZ",
+      "routeFrom": "asda",
+      "hasRoute": true
+    },
+    {
+      "id": "asir-ghaithan",
+      "source": "asir",
+      "name": {
+        "ar": "مسار غيثان",
+        "en": "Ghithan Trail"
+      },
+      "nameEnOurs": false,
+      "region": {
+        "ar": "عسير",
+        "en": "Asir"
+      },
+      "city": {
+        "ar": "السودة",
+        "en": "Al Soudah"
+      },
+      "lengthKm": 3.7,
+      "highM": null,
+      "lowM": null,
+      "gainM": null,
+      "duration": [
+        120,
+        300
+      ],
+      "difficulty": null,
+      "start": [
+        18.225144,
+        42.395597
+      ],
+      "end": [
+        18.207581,
+        42.379434
+      ],
+      "oneWay": true,
+      "page": {
+        "ar": "https://discoveraseer.com/booklet?type=outdoor&locale=ar",
+        "en": "https://discoveraseer.com/booklet?type=outdoor&locale=en"
+      },
+      "download": "https://drive.google.com/uc?export=download&id=1MVrxR3o7PNSv1s2DABqWMBnGvhJoMybr",
+      "routeFrom": null,
+      "note": "linked KML is a different Wikiloc track (Qouron descent to Shokan): 5.6 km, ends 977 m from the stated end",
+      "hasRoute": false
+    },
+    {
+      "id": "asir-manaa",
+      "source": "asir",
+      "name": {
+        "ar": "مسار جبل منعاء",
+        "en": "Mana'a Mountain Trail"
+      },
+      "nameEnOurs": false,
+      "region": {
+        "ar": "عسير",
+        "en": "Asir"
+      },
+      "city": {
+        "ar": "تنومة",
+        "en": "Tanomah"
+      },
+      "lengthKm": 5.6,
+      "highM": null,
+      "lowM": null,
+      "gainM": null,
+      "duration": [
+        120,
+        240
+      ],
+      "difficulty": null,
+      "start": [
+        18.971994,
+        42.166304
+      ],
+      "end": [
+        18.993709,
+        42.153677
+      ],
+      "oneWay": true,
+      "page": {
+        "ar": "https://discoveraseer.com/booklet?type=outdoor&locale=ar",
+        "en": "https://discoveraseer.com/booklet?type=outdoor&locale=en"
+      },
+      "download": "https://drive.google.com/uc?export=download&id=1l5pVVCWrseHVQikmPLpHGcVT8O9nHWvs",
+      "routeFrom": "asda",
+      "hasRoute": true
+    },
+    {
+      "id": "asir-dalghan",
+      "source": "asir",
+      "name": {
+        "ar": "مسار منتزه دلغان",
+        "en": "Dalghan Park Trail"
+      },
+      "nameEnOurs": true,
+      "region": {
+        "ar": "عسير",
+        "en": "Asir"
+      },
+      "city": {
+        "ar": "أبها",
+        "en": "Abha"
+      },
+      "lengthKm": 3,
+      "highM": null,
+      "lowM": null,
+      "gainM": null,
+      "duration": [
+        30,
+        30
+      ],
+      "difficulty": null,
+      "start": [
+        18.104222,
+        42.704306
+      ],
+      "end": null,
+      "oneWay": true,
+      "page": {
+        "ar": "https://discoveraseer.com/booklet?type=outdoor&locale=ar",
+        "en": "https://discoveraseer.com/booklet?type=outdoor&locale=en"
+      },
+      "download": null,
+      "routeFrom": null,
+      "hasRoute": false
+    },
+    {
+      "id": "asir-shibanah",
+      "source": "asir",
+      "name": {
+        "ar": "مسار شيبانه",
+        "en": "Shibanah Trail"
+      },
+      "nameEnOurs": true,
+      "region": {
+        "ar": "عسير",
+        "en": "Asir"
+      },
+      "city": {
+        "ar": "شيبانه",
+        "en": "Shibanah"
+      },
+      "lengthKm": 2.8,
+      "highM": null,
+      "lowM": null,
+      "gainM": null,
+      "duration": [
+        60,
+        180
+      ],
+      "difficulty": null,
+      "start": [
+        19.575555,
+        41.919122
+      ],
+      "end": [
+        19.558213,
+        41.938019
+      ],
+      "oneWay": true,
+      "page": {
+        "ar": "https://discoveraseer.com/booklet?type=outdoor&locale=ar",
+        "en": "https://discoveraseer.com/booklet?type=outdoor&locale=en"
+      },
+      "download": null,
+      "routeFrom": null,
+      "hasRoute": false
+    },
+    {
+      "id": "asir-raheel",
+      "source": "asir",
+      "name": {
+        "ar": "مسار رحل",
+        "en": "Raheel Trail"
+      },
+      "nameEnOurs": true,
+      "region": {
+        "ar": "عسير",
+        "en": "Asir"
+      },
+      "city": {
+        "ar": "رحل",
+        "en": "Raheel"
+      },
+      "lengthKm": 2,
+      "highM": null,
+      "lowM": null,
+      "gainM": null,
+      "duration": [
+        60,
+        240
+      ],
+      "difficulty": null,
+      "start": [
+        19.003775,
+        42.199394
+      ],
+      "end": [
+        18.988519,
+        42.208913
+      ],
+      "oneWay": true,
+      "page": {
+        "ar": "https://discoveraseer.com/booklet?type=outdoor&locale=ar",
+        "en": "https://discoveraseer.com/booklet?type=outdoor&locale=en"
+      },
+      "download": null,
+      "routeFrom": null,
+      "hasRoute": false
+    },
+    {
+      "id": "asir-qalamain",
+      "source": "asir",
+      "name": {
+        "ar": "مسار قلمين",
+        "en": "Qalamain Trail"
+      },
+      "nameEnOurs": true,
+      "region": {
+        "ar": "عسير",
+        "en": "Asir"
+      },
+      "city": {
+        "ar": "قلمين",
+        "en": "Qalamain"
+      },
+      "lengthKm": 0.8,
+      "highM": null,
+      "lowM": null,
+      "gainM": null,
+      "duration": [
+        60,
+        180
+      ],
+      "difficulty": null,
+      "start": [
+        19.532457,
+        41.932411
+      ],
+      "end": [
+        19.532338,
+        41.93933
+      ],
+      "oneWay": true,
+      "page": {
+        "ar": "https://discoveraseer.com/booklet?type=outdoor&locale=ar",
+        "en": "https://discoveraseer.com/booklet?type=outdoor&locale=en"
+      },
+      "download": null,
+      "routeFrom": null,
+      "hasRoute": false
+    },
+    {
+      "id": "asir-madanah",
+      "source": "asir",
+      "name": {
+        "ar": "مسار تجوال المدانة العقيقة",
+        "en": "Al-Madanah to Al-Aqiqah Heritage Walk"
+      },
+      "nameEnOurs": true,
+      "region": {
+        "ar": "عسير",
+        "en": "Asir"
+      },
+      "city": {
+        "ar": "النماص",
+        "en": "Al Namas"
+      },
+      "lengthKm": 10,
+      "highM": null,
+      "lowM": null,
+      "gainM": null,
+      "duration": [
+        120,
+        120
+      ],
+      "difficulty": null,
+      "start": [
+        19.2377768,
+        42.0690255
+      ],
+      "end": [
+        19.2093646,
+        42.0325401
+      ],
+      "oneWay": false,
+      "page": {
+        "ar": "https://discoveraseer.com/booklet?type=outdoor&locale=ar",
+        "en": "https://discoveraseer.com/booklet?type=outdoor&locale=en"
+      },
+      "download": null,
+      "routeFrom": null,
+      "hasRoute": false
+    }
+  ]
+}

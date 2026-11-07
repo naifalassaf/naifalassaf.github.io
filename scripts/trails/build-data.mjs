@@ -5,6 +5,9 @@
  *   node scripts/trails/build-data.mjs           refresh Darb from its public API
  *   node scripts/trails/build-data.mjs --ksrnr   also re-download KSRNR's KML routes
  *
+ * Sources: KSRNR (snapshot), Darb (live API), Asir (snapshot of the Aseer Development
+ * Authority's outdoor guide). The site shows KSRNR and Asir only with ?dev=true.
+ *
  * Outputs (both committed):
  *   src/trails/data/trails.json   every Trail, normalised and bilingual
  *   public/data/trail-routes.json     every Route, as simplified [lat, lon] lines keyed by Trail id
@@ -243,6 +246,20 @@ async function darb() {
   return { trails, routes, asOf: today() }
 }
 
+/* ---------- Asir ---------- */
+
+/**
+ * Aseer Development Authority, Outdoor Activities Guide: a dated snapshot read from the guide
+ * by hand (asir-snapshot.json), with Routes from the guide's linked KML files (asir-routes.json).
+ * The snapshot carries working fields (end, oneWay, routeFrom, note) that the site doesn't use.
+ */
+async function asir() {
+  const snap = await readJson(resolve(HERE, 'asir-snapshot.json'), { asOf: null, trails: [] })
+  const routes = await readJson(resolve(HERE, 'asir-routes.json'), {})
+  const trails = snap.trails.map(({ end, oneWay, routeFrom, note, ...t }) => ({ ...t, hasRoute: Boolean(routes[t.id]?.length) }))
+  return { trails, routes, asOf: snap.asOf }
+}
+
 /* ---------- main ---------- */
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
@@ -252,6 +269,9 @@ const prevRoutes = await readJson(OUT_ROUTES, {})
 
 console.log('KSRNR (snapshot)')
 const k = await ksrnr(process.argv.includes('--ksrnr'))
+
+console.log('Asir (snapshot)')
+const a = await asir()
 
 console.log('Darb (live API)')
 let d
@@ -267,9 +287,10 @@ try {
 }
 
 await writeJson(OUT_TRAILS, {
-  sources: { ksrnr: { asOf: k.asOf }, darb: { asOf: d.asOf } },
-  trails: [...k.trails, ...d.trails],
+  sources: { ksrnr: { asOf: k.asOf }, darb: { asOf: d.asOf }, asir: { asOf: a.asOf } },
+  trails: [...k.trails, ...d.trails, ...a.trails],
 })
-await writeJson(OUT_ROUTES, { ...k.routes, ...d.routes })
-console.log(`Wrote ${k.trails.length + d.trails.length} trails, ${Object.keys({ ...k.routes, ...d.routes }).length} routes`)
+const allRoutes = { ...k.routes, ...d.routes, ...a.routes }
+await writeJson(OUT_ROUTES, allRoutes)
+console.log(`Wrote ${k.trails.length + d.trails.length + a.trails.length} trails, ${Object.keys(allRoutes).length} routes`)
 }

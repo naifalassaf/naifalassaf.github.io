@@ -1,5 +1,5 @@
 export type Lang = 'ar' | 'en'
-export type SourceId = 'ksrnr' | 'darb'
+export type SourceId = 'ksrnr' | 'darb' | 'asir'
 export type Difficulty = 'easy' | 'moderate' | 'hard'
 
 export interface Bilingual {
