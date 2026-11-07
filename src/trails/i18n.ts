@@ -35,6 +35,7 @@ const ar = {
   link: {
     ksrnr: 'الصفحة الرسمية',
     darb: 'صفحة درب',
+    schf: 'صفحة اتحاد التسلق والهايكنج',
     asir: 'دليل الأنشطة',
     kml: 'تحميل KML',
     gmaps: 'خرائط جوجل',
@@ -85,6 +86,8 @@ const ar = {
       'مسارات <b>عسير</b> ({{count}}) من <a href="https://discoveraseer.com/booklet?type=outdoor&locale=ar" target="_blank" rel="noopener">دليل الأنشطة الخارجية</a> لهيئة تطوير منطقة عسير، لقطة بتاريخ {{date}}، وخطوطها من ملفات KML المرتبطة بالدليل. الحقوق محفوظة للهيئة.',
     darb:
       'مسارات <b>جمعية درب</b> ({{count}}) وخطوطها من <a href="https://darb.org" target="_blank" rel="noopener">جمعية درب</a>، وتُحدَّث أسبوعيًّا (آخر تحديث {{date}}). الحقوق محفوظة للجمعية.',
+    schf:
+      'مسار <b>قارح - الماردية</b> من بناء جمعية درب، ولم يُنشر في موقعها بعد: بياناته من <a href="https://climbing.sa/qarh-al-mardiyah-trail/" target="_blank" rel="noopener">صفحة المسار لدى الاتحاد السعودي للتسلق والهايكنج</a>، وخطه من <a href="https://www.wikiloc.com/hiking-trails/msr-qrh-lmrdy-266740482" target="_blank" rel="noopener">تسجيل طاري الشمري على Wikiloc</a> بعد مطابقته بخريطة الاتحاد.',
     gaps: 'المسارات التي لا تنشر جهتها إحداثياتها مدرجة بمدينتها مع رابط بحث في الخرائط.',
     unofficial:
       'هذه صفحة شخصية غير رسمية لا تمثل أيًّا من الجهات. لكل مسار رابط إلى صفحته الرسمية، فارجع إليها قبل الخروج.',
@@ -126,6 +129,7 @@ const en: typeof ar = {
   link: {
     ksrnr: 'Official page',
     darb: 'Darb page',
+    schf: 'SCHF page',
     asir: 'Activities guide',
     kml: 'Download KML',
     gmaps: 'Google Maps',
@@ -176,6 +180,8 @@ const en: typeof ar = {
       '<b>Asir</b> trails ({{count}}) come from the <a href="https://discoveraseer.com/booklet?type=outdoor&locale=en" target="_blank" rel="noopener">Outdoor Activities Guide</a> of the Aseer Development Authority, as of {{date}}, with routes from the KML files the guide links to. All rights belong to the Authority.',
     darb:
       '<b>Darb</b> trails ({{count}}) and their routes come from the <a href="https://darb.org/en" target="_blank" rel="noopener">Darb association</a>, refreshed weekly (last {{date}}). All rights belong to Darb.',
+    schf:
+      'The <b>Qarh – Al Mardiyah</b> trail was built by Darb but isn’t on Darb’s site yet. Its details come from the <a href="https://climbing.sa/qarh-al-mardiyah-trail/" target="_blank" rel="noopener">Saudi Climbing and Hiking Federation’s trail page</a>, and its route from <a href="https://www.wikiloc.com/hiking-trails/msr-qrh-lmrdy-266740482" target="_blank" rel="noopener">a Wikiloc recording by طاري الشمري</a>, checked against the Federation’s map.',
     gaps: 'Trails whose Source publishes no coordinates are listed by city, with a map search link.',
     unofficial:
       'This is an unofficial personal project, not affiliated with any Source. Every trail links to its official page: check it before you go.',

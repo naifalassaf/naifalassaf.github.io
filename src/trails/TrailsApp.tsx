@@ -241,6 +241,7 @@ export default function TrailsApp() {
           {SOURCES.map((s) => (
             <p key={s} dangerouslySetInnerHTML={{ __html: t(`about.${s}`, { count: num(lang, count(s)), date: date(s) }) }} />
           ))}
+          {TRAILS.some((tr) => tr.pageOf === 'schf') && <p dangerouslySetInnerHTML={{ __html: t('about.schf') }} />}
           <p>{t('about.gaps')}</p>
           {lang === 'en' && anyOurs && <p>{t('about.oursEn')}</p>}
           <p>{t('about.unofficial')}</p>
@@ -359,7 +360,7 @@ function TrailItem(props: { tr: Trail; lang: Lang; on: boolean; hasRoute: boolea
       </div>
       <div className="links" onClick={(e) => e.stopPropagation()}>
         <a href={tr.page[lang]} target="_blank" rel="noopener">
-          {t(`link.${tr.source}`)}
+          {t(`link.${tr.pageOf ?? tr.source}`)}
         </a>
         {tr.download && (
           <a href={tr.download} target="_blank" rel="noopener">

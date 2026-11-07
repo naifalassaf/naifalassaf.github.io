@@ -25,6 +25,8 @@ export interface Trail {
   /** [lat, lon] */
   start: [number, number] | null
   page: { ar: string; en: string }
+  /** whose page `page` is, when it isn't the Source's own (SCHF: Saudi Climbing and Hiking Federation) */
+  pageOf?: 'schf'
   /** the Source's own route file, linked for download */
   download: string | null
   hasRoute: boolean

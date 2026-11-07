@@ -24,7 +24,7 @@ export function popupHtml(tr: Trail, lang: Lang, t: (key: string) => string): st
     `<span class="pm">${stats}</span>` +
     (tr.difficulty ? ` <span class="pill ${tr.difficulty}">${esc(t(`difficulty.${tr.difficulty}`))}</span>` : '') +
     `<br><span class="pm coords">${la.toFixed(5)}, ${lo.toFixed(5)}</span><br>` +
-    `<a href="${esc(tr.page[lang])}" target="_blank" rel="noopener">${esc(t(`link.${tr.source}`))}</a>` +
+    `<a href="${esc(tr.page[lang])}" target="_blank" rel="noopener">${esc(t(`link.${tr.pageOf ?? tr.source}`))}</a>` +
     ` · <a href="https://www.google.com/maps/search/?api=1&query=${la},${lo}" target="_blank" rel="noopener">${esc(t('link.gmaps'))}</a>` +
     `</div>`
   )

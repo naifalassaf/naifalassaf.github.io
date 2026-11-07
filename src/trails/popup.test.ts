@@ -32,4 +32,10 @@ describe('popupHtml', () => {
     expect(html).toContain('href="https://darb.org/tracks/7/1"')
     expect(html).toContain('query=21.1476,40.3024')
   })
+
+  it('labels the page link by whose page it is, when that isn’t the Source', () => {
+    const html = popupHtml(trail('8', { start: [27.5, 41.6], pageOf: 'schf' }), 'en', t)
+    expect(html).toContain('[link.schf]')
+    expect(html).not.toContain('[link.darb]')
+  })
 })

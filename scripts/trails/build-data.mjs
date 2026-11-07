@@ -286,6 +286,13 @@ try {
   }
 }
 
+// Darb trails its API doesn't carry yet, kept by hand (darb-extra.json); they replace any copy carried over above
+const x = await readJson(resolve(HERE, 'darb-extra.json'), { trails: [], routes: {} })
+const extraIds = new Set(x.trails.map((t) => t.id))
+d.trails = [...d.trails.filter((t) => !extraIds.has(t.id)), ...x.trails.map((t) => ({ ...t, hasRoute: Boolean(x.routes[t.id]?.length) }))]
+d.routes = { ...d.routes, ...x.routes }
+if (x.trails.length) console.log(`Darb extras (by hand): ${x.trails.length}`)
+
 await writeJson(OUT_TRAILS, {
   sources: { ksrnr: { asOf: k.asOf }, darb: { asOf: d.asOf }, asir: { asOf: a.asOf } },
   trails: [...k.trails, ...d.trails, ...a.trails],
