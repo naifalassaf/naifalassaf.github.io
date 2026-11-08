@@ -70,10 +70,16 @@ export default function PhoneLayout(p: PhoneProps) {
   const sel = p.selected ? p.trails.find((x) => x.id === p.selected) : undefined
 
   // The map reads where the sheet is heading, not where it is mid-animation, so a fly started in
-  // the same render as a snap change frames the Trail above the sheet's new edge.
+  // the same render as a snap change frames the Trail above the sheet's new edge. A full sheet
+  // hides the map, and filtering or searching there would otherwise squeeze the matches into the
+  // sliver left above it and zoom out to the whole world; frame them for the half sheet instead,
+  // which is what's showing when the sheet comes back down.
   const snapNow = useRef(snap)
   snapNow.current = snap
-  const covered = () => ({ top: TOP, bottom: heightOf(snapNow.current, root.current?.clientHeight ?? 0) })
+  const covered = () => {
+    const H = root.current?.clientHeight ?? 0
+    return { top: TOP, bottom: heightOf(snapNow.current === 'full' ? 'half' : snapNow.current, H) }
+  }
 
   // Leaflet's bottom controls (legend, credit) ride on top of the sheet
   useEffect(() => {
