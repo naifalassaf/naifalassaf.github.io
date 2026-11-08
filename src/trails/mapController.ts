@@ -2,6 +2,7 @@ import L from 'leaflet'
 import type { Lang, Routes, SourceId, Trail } from './types'
 import { esc, pick } from './format'
 import { popupHtml } from './popup'
+import { oneFingerZoom } from './oneFingerZoom'
 
 /** Everything the map draws. Pass the whole state on every update; the controller works out what changed. */
 export interface TrailMapState {
@@ -30,6 +31,14 @@ export interface TrailMapOptions {
   t: (key: string, lang: Lang) => string
   /** better satellite imagery to swap in for Esri once it loads; Esri stays if it's missing or fails */
   loadSatellite?: () => Promise<L.TileLayer>
+  /**
+   * How many px of the map are hidden under things drawn over its top and bottom edges (the
+   * phone layout's floating header and bottom sheet). Read at each move, so it can follow a
+   * sheet that's dragged; framing and flying keep their target in the part left showing.
+   */
+  covered?: () => { top: number; bottom: number }
+  /** false: Start points open no popup, for a layout that shows the selected Trail itself */
+  popups?: boolean
 }
 
 export interface TrailMap {
@@ -74,6 +83,7 @@ const hasRoutes = (r: Routes | undefined) => !!r && Object.keys(r).length > 0
 export function createTrailMap(el: HTMLElement, opts: TrailMapOptions): TrailMap {
   const m = L.map(el, { zoomControl: true, attributionControl: true, maxZoom: 20 }).setView([24.6, 44.5], 6)
   m.attributionControl.setPrefix(false)
+  const dropOneFingerZoom = oneFingerZoom(m)
 
   // Esri is the fallback satellite. In remote Saudi areas it only has imagery to zoom 17,
   // so deeper zooms enlarge those tiles instead of going blank.
@@ -107,7 +117,22 @@ export function createTrailMap(el: HTMLElement, opts: TrailMapOptions): TrailMap
   let pendingPopup: (() => void) | null = null
   let gone = false
 
-  const fly = (p: [number, number]) => m.flyTo(p, Math.max(m.getZoom(), 15), { duration: 0.9 })
+  const cover = () => opts.covered?.() ?? { top: 0, bottom: 0 }
+  /** fitBounds/flyToBounds padding that keeps to the uncovered band */
+  const pad = () => {
+    const c = cover()
+    return { paddingTopLeft: L.point(0, c.top), paddingBottomRight: L.point(0, c.bottom) }
+  }
+  /** the map centre that puts `p` in the middle of the uncovered band at zoom `z` */
+  const centreFor = (p: L.LatLngExpression, z: number) => {
+    const c = cover()
+    if (c.bottom === c.top) return L.latLng(p) // nothing to shift: skip the projection round trip
+    return m.unproject(m.project(p, z).add([0, (c.bottom - c.top) / 2]), z)
+  }
+  const fly = (p: [number, number]) => {
+    const z = Math.max(m.getZoom(), 15)
+    m.flyTo(centreFor(p, z), z, { duration: 0.9 })
+  }
 
   function buildControls(lang: Lang, sources: SourceId[]) {
     controls.forEach((c) => c.remove())
@@ -170,7 +195,7 @@ export function createTrailMap(el: HTMLElement, opts: TrailMapOptions): TrailMap
       }
       if (!tr.start) continue
       const mk = L.marker(tr.start, { icon: icon(tr, false), title: pick(tr.name, s.lang), keyboard: false })
-      mk.bindPopup(popupHtml(tr, s.lang, t))
+      if (opts.popups !== false) mk.bindPopup(popupHtml(tr, s.lang, t))
       mk.on('click', () => opts.onSelect(tr.id))
       markers.set(tr.id, mk)
     }
@@ -184,7 +209,7 @@ export function createTrailMap(el: HTMLElement, opts: TrailMapOptions): TrailMap
       const title = pick(tr.name, lang)
       mk.options.title = title
       mk.getElement()?.setAttribute('title', title)
-      mk.setPopupContent(popupHtml(tr, lang, t))
+      if (mk.getPopup()) mk.setPopupContent(popupHtml(tr, lang, t))
     })
   }
 
@@ -213,9 +238,9 @@ export function createTrailMap(el: HTMLElement, opts: TrailMapOptions): TrailMap
     if (!framed) {
       framed = true
       // first paint: show everything, unless a ?trail= link already picked one to fly to
-      if (!s.selected) m.fitBounds(b, { maxZoom: 11 })
+      if (!s.selected) m.fitBounds(b, { maxZoom: 11, ...pad() })
       else m.setView(b.getCenter(), 6)
-    } else m.flyToBounds(b, { duration: 0.7, maxZoom: 11 })
+    } else m.flyToBounds(b, { duration: 0.7, maxZoom: 11, ...pad() })
   }
 
   function flyToSelected(id: string) {
@@ -226,7 +251,7 @@ export function createTrailMap(el: HTMLElement, opts: TrailMapOptions): TrailMap
     // Finish any move still animating first: stopping a pan fires moveend, which would
     // otherwise open the popup the moment this fly begins instead of when it ends.
     m.stop()
-    if (mk && m.hasLayer(mk)) {
+    if (mk && m.hasLayer(mk) && mk.getPopup()) {
       const open = () => {
         pendingPopup = null
         // look the marker up now: the layers may have been rebuilt during the flight
@@ -237,8 +262,8 @@ export function createTrailMap(el: HTMLElement, opts: TrailMapOptions): TrailMap
       // listen before moving: without animation Leaflet moves synchronously
       m.once('moveend', open)
     }
-    if (pl && m.hasLayer(pl)) m.flyToBounds(pl.getBounds().pad(0.2), { duration: 0.9, maxZoom: 17 })
-    else if (mk) m.flyTo(mk.getLatLng(), 13, { duration: 0.9 })
+    if (pl && m.hasLayer(pl)) m.flyToBounds(pl.getBounds().pad(0.2), { duration: 0.9, maxZoom: 17, ...pad() })
+    else if (mk) m.flyTo(centreFor(mk.getLatLng(), 13), 13, { duration: 0.9 })
   }
 
   function drawMe(me: TrailMapState['me']) {
@@ -259,7 +284,7 @@ export function createTrailMap(el: HTMLElement, opts: TrailMapOptions): TrailMap
     }
   }
 
-  // the stacked mobile layout and window resizes change the map's size under Leaflet
+  // a window resize, or crossing into the phone layout, changes the map's size under Leaflet
   const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => m.invalidateSize())
   ro?.observe(el)
 
@@ -319,6 +344,7 @@ export function createTrailMap(el: HTMLElement, opts: TrailMapOptions): TrailMap
     destroy() {
       gone = true
       ro?.disconnect()
+      dropOneFingerZoom()
       m.remove()
     },
   }

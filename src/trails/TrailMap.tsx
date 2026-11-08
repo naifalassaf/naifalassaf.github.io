@@ -17,6 +17,10 @@ interface Props {
   onSelect: (id: string) => void
   /** the visitor's location, shared with the list's distance sort */
   me: MyLocation
+  /** false: no popups, for a layout that shows the selected Trail itself (read once, at mount) */
+  popups?: boolean
+  /** px hidden under the page's own overlays at the map's top and bottom edges */
+  covered?: () => { top: number; bottom: number }
 }
 
 type Help = 'denied' | 'unavailable' | 'unsupported'
@@ -30,7 +34,7 @@ function platform(): 'ios' | 'android' | 'desktop' {
 }
 
 /** React's side of the map: owns the visitor's location and the help dialog; the map controller draws. */
-export default function TrailMap({ trails, visible, selected, routes, onSelect, me }: Props) {
+export default function TrailMap({ trails, visible, selected, routes, onSelect, me, popups, covered }: Props) {
   const { t, i18n } = useTranslation()
   const lang = i18n.language as Lang
   const el = useRef<HTMLDivElement>(null)
@@ -50,8 +54,8 @@ export default function TrailMap({ trails, visible, selected, routes, onSelect, 
 
   // the controller is created once; its callbacks reach the latest render through this
   // (react-i18next hands back a new i18n object on a language switch, so it goes through here too)
-  const latest = useRef({ onSelect, locate, i18n })
-  latest.current = { onSelect, locate, i18n }
+  const latest = useRef({ onSelect, locate, i18n, covered })
+  latest.current = { onSelect, locate, i18n, covered }
 
   useEffect(() => {
     const c = createTrailMap(el.current!, {
@@ -59,6 +63,8 @@ export default function TrailMap({ trails, visible, selected, routes, onSelect, 
       onLocate: () => latest.current.locate(),
       t: (k, l) => latest.current.i18n.getFixedT(l)(k),
       loadSatellite: GOOGLE_KEY ? () => googleSatellite(GOOGLE_KEY) : undefined,
+      covered: () => latest.current.covered?.() ?? { top: 0, bottom: 0 },
+      popups,
     })
     map.current = c
     return () => {

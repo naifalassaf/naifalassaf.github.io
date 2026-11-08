@@ -398,6 +398,16 @@ html[lang='en'] .alt {
 .leaflet-container {
   font-family: var(--sans);
 }
+/* Controls are buttons, not text: a quick double tap on + or − made iOS select the glyph
+   (and offer Copy). manipulation also stops a double tap from zooming the page. */
+.leaflet-control-container,
+.ph-top,
+.sheet .sorts {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
 .leaflet-popup-content-wrapper {
   background: var(--sand-100);
   color: var(--ink-900);
@@ -555,96 +565,441 @@ html[lang='en'] .legend {
   font-weight: 600;
 }
 
-@media (max-width: 900px) {
-  /* stack: the map stays pinned on top while the register scrolls under it,
-     so picking a Trail in the list is always seen on the map */
-  html,
-  body,
-  #root {
-    height: auto;
-  }
-  .shell {
-    flex-direction: column;
-    height: auto;
-  }
-  #map {
-    order: -1;
-    flex: none;
-    position: sticky;
-    top: 0;
-    z-index: 10; /* own stacking context: Leaflet's panes stay inside it */
-    height: 40vh;
-    height: 40svh;
-    min-height: 240px;
-    width: 100%;
-    border-bottom: 1px solid var(--hairline);
-  }
-  aside {
-    width: 100%;
-    height: auto;
-    overflow: visible;
-    border-inline-end: none;
-  }
-  /* a Trail scrolled into view lands below the pinned map, not under it */
-  .item {
-    scroll-margin-top: calc(max(40svh, 240px) + 8px);
-  }
+/* ---- phones: the map fills the screen, the register is a bottom sheet over it (PhoneLayout) ---- */
+.phone {
+  --sheet: 50%;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+.phone #map {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  z-index: 0; /* own stacking context: Leaflet's panes stay under the bar and the sheet */
+}
+/* controls clear the brand bar; the legend and credit ride on the sheet's edge */
+.phone .leaflet-top {
+  top: 60px;
+}
+.phone .leaflet-bottom {
+  bottom: var(--sheet);
+}
+/* with the sheet all the way up there's no map left to explain, and they'd sit under the brand bar */
+.phone:has(.sheet[data-snap='full']:not(.dragging)) .leaflet-bottom {
+  visibility: hidden;
+}
+.phone .locate-help {
+  top: 68px;
+}
+/* #map outranks leaflet.css, which loads after this file. Tap targets ~40px. */
+.phone #map .leaflet-bar a {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 20px;
+}
+.phone #map .leaflet-control-layers-toggle {
+  width: 40px;
+  height: 40px;
+}
+.phone .legend {
+  font-size: 12px;
+  padding: 4px 8px;
+}
 
-  /* filters fold behind a button; search stays out */
-  .ftoggle {
-    display: inline-flex !important;
-    align-items: center;
-  }
-  .more {
-    display: none;
-  }
-  .more.open {
-    display: flex;
-  }
+.ph-top {
+  position: absolute;
+  z-index: 2;
+  inset: 12px 12px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-1);
+  pointer-events: none; /* the gap between the two stays part of the map */
+}
+.ph-top > * {
+  pointer-events: auto;
+}
+.ph-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  padding: 4px 16px 4px 8px;
+  background: var(--sand-100);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 2px 10px rgb(46 42 36 / 0.15);
+}
+.ph-brand .lockup {
+  width: 30px;
+  flex: none;
+  color: var(--ink-900);
+}
+.ph-brand .lockup svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.ph-brand h1 {
+  margin: 0;
+  font-size: 17px;
+  line-height: 32px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ph-top .lang {
+  align-self: auto;
+  min-height: 40px;
+  padding: 8px 14px;
+  box-shadow: 0 2px 10px rgb(46 42 36 / 0.15);
+}
 
-  /* tap targets: ~44px for controls, ~40px for chips and links */
-  .filters button,
-  .lang {
-    min-height: 40px;
-    padding: 8px 14px;
+.sheet {
+  position: absolute;
+  z-index: 3;
+  inset: auto 0 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--sand-100);
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -6px 24px rgb(46 42 36 / 0.22);
+  transition: height 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.sheet.dragging {
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet {
+    transition: none;
   }
-  .search input {
-    min-height: 44px;
-    font-size: 16px; /* 16px stops iOS zooming into the field */
-  }
-  .sort select {
-    min-height: 44px;
-    font-size: 16px;
-  }
-  .links {
-    gap: 10px;
-  }
-  .links a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 40px;
-    padding: 6px 14px;
-    font-size: 14px;
-  }
-  /* #map outranks leaflet.css, which loads after this file */
-  #map .leaflet-bar a {
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
-    font-size: 20px;
-  }
-  #map .leaflet-control-layers-toggle {
-    width: 40px;
-    height: 40px;
-  }
-  /* keep the legend from covering a third of a small map */
-  .legend {
-    font-size: 12px;
-    padding: 4px 8px;
-  }
-  .masthead {
-    padding: var(--space-2);
-  }
+}
+/* keep in step with heightOf() in PhoneLayout.tsx */
+.sheet[data-snap='peek'] {
+  height: 156px;
+}
+.sheet[data-snap='half'] {
+  height: 50%;
+}
+.sheet[data-snap='full'] {
+  height: calc(100% - 64px);
+}
+.grab {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 40px; /* a generous strip to catch a thumb; the header below drags too */
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: grab;
+  touch-action: none; /* the drag is ours, not a page scroll */
+  -webkit-user-select: none;
+  user-select: none;
+}
+.grab span {
+  width: 40px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--ink-600);
+  opacity: 0.45;
+}
+.grab:focus-visible {
+  outline: 2px solid var(--samar-700);
+  outline-offset: -2px;
+}
+.sheet-head.filters {
+  flex: none;
+  padding-top: 0;
+  gap: 10px;
+}
+.filters .ficon {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+.ficon svg {
+  width: 20px;
+  height: 20px;
+}
+.filters .ficon[aria-expanded='true'] {
+  background: var(--ink-900);
+  color: var(--sand-100);
+}
+.ficon .badge {
+  position: absolute;
+  top: -4px;
+  inset-inline-end: -4px;
+  margin: 0;
+}
+.phone .search input {
+  min-height: 44px;
+  font-size: 16px; /* 16px stops iOS zooming into the field */
+  border-radius: var(--radius-pill);
+  padding-inline: 16px;
+}
+.sorts {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-inline: calc(-1 * var(--space-2));
+  padding-inline: var(--space-2);
+}
+.sorts::-webkit-scrollbar {
+  display: none;
+}
+.filters .sorts button {
+  flex: none;
+  min-height: 40px;
+  padding: 8px 14px;
+  white-space: nowrap;
+}
+/* Advanced search: a page in the sheet, with its results button pinned to the bottom */
+.filters.fpage {
+  flex: 1;
+  min-height: 0;
+  padding: 0;
+  gap: 0;
+  border: 0;
+}
+.fpage-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 0 var(--space-2) 8px;
+  border-bottom: 1px solid var(--hairline);
+}
+.filters .fpage-head .back {
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--samar-700);
+}
+.fpage-head h2 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 600;
+}
+.fpage-body {
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.fpage-body .label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-900);
+  margin-bottom: 8px;
+}
+.fpage-body .grp {
+  gap: 8px;
+}
+.filters .fpage-body button {
+  min-height: 40px;
+  padding: 8px 16px;
+}
+.fpage-foot {
+  flex: none;
+  display: flex;
+  gap: var(--space-1);
+  padding: 12px var(--space-2);
+  border-top: 1px solid var(--hairline);
+}
+.filters .fpage-foot button {
+  min-height: 48px;
+  padding: 8px 16px;
+}
+.filters .fpage-foot .clear:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.filters .fpage-foot .show {
+  flex: 1;
+  background: var(--samar-700);
+  border-color: var(--samar-700);
+  color: var(--sand-100);
+  font-size: 16px;
+  font-weight: 600;
+}
+.count {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-600);
+  font-variant-numeric: tabular-nums;
+}
+.sheet-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 10px var(--space-2);
+  border: 0;
+  border-bottom: 1px solid var(--hairline);
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.row:focus-visible,
+.back:focus-visible {
+  outline: 2px solid var(--samar-700);
+  outline-offset: -2px;
+}
+.row-main,
+.row-meta {
+  display: flex;
+  flex-direction: column;
+}
+.row-main {
+  flex: 1;
+  min-width: 0;
+}
+.row-main b {
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.row small {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--ink-600);
+}
+.row-meta {
+  flex: none;
+  align-items: flex-end;
+  font-variant-numeric: tabular-nums;
+}
+.row-meta b {
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 600;
+}
+/* difficulty as the pill's lightness ramp, shrunk to a dot */
+.dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-600);
+}
+.dot.easy {
+  background: var(--sand-300);
+}
+.dot.moderate {
+  background: var(--samar-500);
+  border-color: var(--samar-500);
+}
+.dot.hard {
+  background: var(--ink-900);
+  border-color: var(--ink-900);
+}
+
+.detail {
+  padding: 0 var(--space-2) var(--space-3);
+}
+.back {
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: 500 14px/20px var(--sans);
+  color: var(--samar-700);
+  cursor: pointer;
+}
+.detail h2 {
+  margin: 4px 0 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+}
+.detail h2 .n {
+  flex: 1;
+  min-width: 0;
+}
+.detail h2 sup {
+  color: var(--ink-600);
+  font-weight: 400;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+  gap: var(--space-1);
+  margin: var(--space-2) 0;
+}
+.stats div {
+  background: #fffaf1;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+.stats dt {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ink-600);
+}
+.stats dd {
+  margin: 2px 0 0;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.stats .u {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-600);
+}
+.phone .links {
+  gap: 10px;
+}
+.phone .links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 16px;
+  font-size: 15px;
+  border-radius: var(--radius-pill);
+}
+.links a.primary {
+  background: var(--samar-700);
+  border-color: var(--samar-700);
+  color: var(--sand-100);
+  font-weight: 500;
 }
 
 .google-logo {

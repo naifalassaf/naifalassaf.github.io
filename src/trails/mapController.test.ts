@@ -244,6 +244,44 @@ describe("the visitor's location", () => {
   })
 })
 
+describe('the phone layout', () => {
+  const recreate = (o: { covered?: () => { top: number; bottom: number }; popups?: boolean }) => {
+    map.destroy()
+    map = createTrailMap(el, { onSelect, onLocate, t, ...o })
+  }
+
+  it('flies a Trail to the middle of the part of the map the sheet leaves showing', () => {
+    // 600px map, the bottom 300px under the sheet: the Start point should sit 150px down, not 300
+    recreate({ covered: () => ({ top: 0, bottom: 300 }) })
+    map.update(state())
+    map.update(state({ selected: 'b' }))
+    const { center, zoom } = map.view()
+    expect(zoom).toBe(13)
+    expect(center[1]).toBeCloseTo(46.6, 5)
+    expect(center[0]).toBeLessThan(24.7) // the centre drops south, lifting the point above the sheet
+    const px = L.CRS.EPSG3857.latLngToPoint(L.latLng(24.7, 46.6), 13).y - L.CRS.EPSG3857.latLngToPoint(L.latLng(...center), 13).y
+    expect(px).toBeCloseTo(-150, 0)
+  })
+
+  it('reads the covered edges at each move, so a resized sheet is followed', () => {
+    let bottom = 0
+    recreate({ covered: () => ({ top: 0, bottom }) })
+    map.update(state())
+    bottom = 400
+    map.update(state({ selected: 'b' }))
+    expect(map.view().center[0]).toBeLessThan(24.7)
+  })
+
+  it('opens no popup when the page shows the selected Trail itself', () => {
+    recreate({ popups: false })
+    map.update(state())
+    map.update(state({ selected: 'b' }))
+    expect(popupText()).toBeNull()
+    map.update(state({ selected: 'b', lang: 'ar' }))
+    expect(popupText()).toBeNull()
+  })
+})
+
 describe('satellite imagery', () => {
   it('swaps Esri for the loaded imagery', async () => {
     map.destroy()

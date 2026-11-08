@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import data from './data/trails.json'
 import TrailMap from './TrailMap'
+import PhoneLayout from './PhoneLayout'
+import { Chips, Svg, TrailLinks, type FilterGroup, type Sort } from './parts'
 import { LOCKUP_SVG } from './lockup'
 import { rememberLang } from './i18n'
 import { difficultyRank, duration, fold, haystack, km, num, pick } from './format'
@@ -14,24 +16,18 @@ const DEV = new URLSearchParams(location.search).get('dev') === 'true'
 const SOURCES: SourceId[] = DEV ? ['ksrnr', 'darb', 'asir'] : ['darb']
 const TRAILS = DATA.trails.filter((t) => SOURCES.includes(t.source))
 const LEVELS: Difficulty[] = ['easy', 'moderate', 'hard']
-type Sort = 'default' | 'short' | 'long' | 'easy' | 'near'
-
-const Icon = {
-  dist: <path d="M3 12h18M4 7v10M20 7v10" />,
-  elev: <path d="M4 21h16M12 18V6M7 11l5-5 5 5" />,
-  time: (
-    <>
-      <path d="M4 4h16v16H4z" />
-      <path d="M12 8v4l3 2" />
-    </>
-  ),
-  route: <path d="M5 19c4 0 3-6 7-6s3-6 7-6" />,
+/** phones get the map with a bottom sheet; wider screens, the register beside the map */
+const PHONE = '(max-width: 900px)'
+function usePhone() {
+  const [phone, setPhone] = useState(() => matchMedia(PHONE).matches)
+  useEffect(() => {
+    const mq = matchMedia(PHONE)
+    const on = () => setPhone(mq.matches)
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
+  return phone
 }
-const Svg = ({ k }: { k: keyof typeof Icon }) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
-    {Icon[k]}
-  </svg>
-)
 
 function initialTrail() {
   const id = new URLSearchParams(location.search).get('trail')
@@ -58,6 +54,7 @@ export default function TrailsApp() {
   // Source, region and difficulty fold behind an Advanced search button
   const [filtersOpen, setFiltersOpen] = useState(false)
   const me = useMyLocation()
+  const phone = usePhone()
   // the distance sort was picked and is waiting on a first fix, or couldn't get one
   const [nearState, setNearState] = useState<'idle' | 'locating' | 'failed'>('idle')
 
@@ -79,7 +76,7 @@ export default function TrailsApp() {
 
   // a ?trail= link: bring its entry into view in the list too
   useEffect(() => {
-    // desktop only: on phones the map sits above the list and should stay in view
+    // on phones the sheet shows the selected Trail itself
     if (selected && matchMedia('(min-width: 901px)').matches)
       document.getElementById(`trail-${selected}`)?.scrollIntoView({ block: 'center' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -145,6 +142,80 @@ export default function TrailsApp() {
     setReg(null)
     setLvl(null)
   }
+  const deselect = () => {
+    setSelected(null)
+    setParam('trail', null)
+  }
+  const sorts: [Sort, string][] = [
+    ['default', t(SOURCES.length > 1 ? 'filters.sortDefault' : 'filters.sortPlain')],
+    ['near', t('filters.sortNear')],
+    ['short', t('filters.sortShort')],
+    ['long', t('filters.sortLong')],
+    ['easy', t('filters.sortEasy')],
+  ]
+  const sortNote = sort === 'near' && nearState !== 'idle' ? t(nearState === 'locating' ? 'filters.locating' : 'filters.noLocation') : null
+
+  // Advanced search, once for both layouts; Source only when more than one is shown
+  const groups: FilterGroup[] = [
+    ...(SOURCES.length > 1
+      ? [{ key: 'src', label: t('filters.source'), value: src, options: SOURCES.map((s): [string, string] => [s, t(`source.${s}`)]), onChange: (v: string | null) => setSrc(v as SourceId | null) }]
+      : []),
+    { key: 'reg', label: t('filters.region'), value: reg, options: regions.map((r): [string, string] => [r.ar, pick(r, lang)]), onChange: setReg },
+    { key: 'lvl', label: t('filters.difficulty'), value: lvl, options: LEVELS.map((d): [string, string] => [d, t(`difficulty.${d}`)]), onChange: (v: string | null) => setLvl(v as Difficulty | null) },
+  ]
+
+  const filterChips = (
+    <>
+      {groups.map((g) => (
+        <Chips key={g.key} label={g.label} all={t('filters.all')} value={g.value} onChange={g.onChange} options={g.options} />
+      ))}
+      {active > 0 && (
+        <button type="button" className="clear" onClick={clearFilters}>
+          {t('filters.clear')}
+        </button>
+      )}
+    </>
+  )
+
+  const colophon = (
+    <footer className="colophon">
+      <h3>{t('about.heading')}</h3>
+      {SOURCES.map((s) => (
+        <p key={s} dangerouslySetInnerHTML={{ __html: t(`about.${s}`, { count: num(lang, count(s)), date: date(s) }) }} />
+      ))}
+      {TRAILS.some((tr) => tr.pageOf === 'schf') && <p dangerouslySetInnerHTML={{ __html: t('about.schf') }} />}
+      <p>{t('about.gaps')}</p>
+      {lang === 'en' && anyOurs && <p>{t('about.oursEn')}</p>}
+      <p>{t('about.unofficial')}</p>
+      <p dangerouslySetInnerHTML={{ __html: t('about.by') }} />
+    </footer>
+  )
+
+  if (phone)
+    return (
+      <PhoneLayout
+        trails={TRAILS}
+        shown={shown}
+        visible={visible}
+        routes={routes}
+        me={me}
+        q={q}
+        setQ={setQ}
+        sort={sort}
+        sorts={sorts}
+        chooseSort={chooseSort}
+        sortNote={sortNote}
+        active={active}
+        groups={groups}
+        clearFilters={clearFilters}
+        colophon={colophon}
+        selected={selected}
+        select={select}
+        deselect={deselect}
+        switchLang={switchLang}
+        regionCount={regionCount}
+      />
+    )
 
   return (
     <div className="shell">
@@ -193,30 +264,21 @@ export default function TrailsApp() {
             </button>
           </div>
           <div id="filter-more" className={`more${filtersOpen ? ' open' : ''}`}>
-            {SOURCES.length > 1 && (
-              <Chips label={t('filters.source')} all={t('filters.all')} value={src} onChange={setSrc} options={SOURCES.map((s) => [s, t(`source.${s}`)])} />
-            )}
-            <Chips label={t('filters.region')} all={t('filters.all')} value={reg} onChange={setReg} options={regions.map((r) => [r.ar, pick(r, lang)])} />
-            <Chips label={t('filters.difficulty')} all={t('filters.all')} value={lvl} onChange={setLvl} options={LEVELS.map((d) => [d, t(`difficulty.${d}`)])} />
-            {active > 0 && (
-              <button type="button" className="clear" onClick={clearFilters}>
-                {t('filters.clear')}
-              </button>
-            )}
+            {filterChips}
           </div>
           <label className="sort">
             <span className="label">{t('filters.sort')}</span>
             <select value={sort} onChange={(e) => chooseSort(e.target.value as Sort)}>
-              <option value="default">{t(SOURCES.length > 1 ? 'filters.sortDefault' : 'filters.sortPlain')}</option>
-              <option value="near">{t('filters.sortNear')}</option>
-              <option value="short">{t('filters.sortShort')}</option>
-              <option value="long">{t('filters.sortLong')}</option>
-              <option value="easy">{t('filters.sortEasy')}</option>
+              {sorts.map(([s, label]) => (
+                <option key={s} value={s}>
+                  {label}
+                </option>
+              ))}
             </select>
           </label>
-          {sort === 'near' && nearState !== 'idle' && (
+          {sortNote && (
             <p className="note" role="status">
-              {t(nearState === 'locating' ? 'filters.locating' : 'filters.noLocation')}
+              {sortNote}
             </p>
           )}
         </div>
@@ -236,45 +298,10 @@ export default function TrailsApp() {
           ))}
         </div>
 
-        <footer className="colophon">
-          <h3>{t('about.heading')}</h3>
-          {SOURCES.map((s) => (
-            <p key={s} dangerouslySetInnerHTML={{ __html: t(`about.${s}`, { count: num(lang, count(s)), date: date(s) }) }} />
-          ))}
-          {TRAILS.some((tr) => tr.pageOf === 'schf') && <p dangerouslySetInnerHTML={{ __html: t('about.schf') }} />}
-          <p>{t('about.gaps')}</p>
-          {lang === 'en' && anyOurs && <p>{t('about.oursEn')}</p>}
-          <p>{t('about.unofficial')}</p>
-          <p dangerouslySetInnerHTML={{ __html: t('about.by') }} />
-        </footer>
+        {colophon}
       </aside>
 
       <TrailMap trails={TRAILS} visible={visible} selected={selected} routes={routes} onSelect={select} me={me} />
-    </div>
-  )
-}
-
-function Chips<V extends string>(props: {
-  label: string
-  all: string
-  value: V | null
-  onChange: (v: V | null) => void
-  options: [V, string][]
-}) {
-  const { label, all, value, onChange, options } = props
-  return (
-    <div role="group" aria-label={label}>
-      <div className="label">{label}</div>
-      <div className="grp">
-        <button type="button" aria-pressed={value === null} onClick={() => onChange(null)}>
-          {all}
-        </button>
-        {options.map(([v, text]) => (
-          <button key={v} type="button" aria-pressed={value === v} onClick={() => onChange(value === v ? null : v)}>
-            {text}
-          </button>
-        ))}
-      </div>
     </div>
   )
 }
@@ -285,7 +312,6 @@ function TrailItem(props: { tr: Trail; lang: Lang; on: boolean; hasRoute: boolea
   const other: Lang = lang === 'ar' ? 'en' : 'ar'
   const secondary = tr.name[other]
   const place = [pick(tr.region, lang), pick(tr.city, lang)].filter(Boolean).join(' · ')
-  const q = encodeURIComponent(`${tr.name.ar} ${tr.city?.ar || tr.region.ar}`)
   const u = { h: t('unit.h'), min: t('unit.min') }
   return (
     <article
@@ -358,28 +384,7 @@ function TrailItem(props: { tr: Trail; lang: Lang; on: boolean; hasRoute: boolea
           </i>
         )}
       </div>
-      <div className="links" onClick={(e) => e.stopPropagation()}>
-        <a href={tr.page[lang]} target="_blank" rel="noopener">
-          {t(`link.${tr.pageOf ?? tr.source}`)}
-        </a>
-        {tr.download && (
-          <a href={tr.download} target="_blank" rel="noopener">
-            {t('link.kml')}
-          </a>
-        )}
-        {tr.start ? (
-          <a href={`https://www.google.com/maps/search/?api=1&query=${tr.start[0]},${tr.start[1]}`} target="_blank" rel="noopener">
-            {t('link.gmaps')}
-          </a>
-        ) : (
-          <>
-            <a href={`https://www.google.com/maps/search/?api=1&query=${q}`} target="_blank" rel="noopener">
-              {t('link.search')}
-            </a>
-            <span className="none">{t('noStart')}</span>
-          </>
-        )}
-      </div>
+      <TrailLinks tr={tr} lang={lang} className="links" />
     </article>
   )
 }
