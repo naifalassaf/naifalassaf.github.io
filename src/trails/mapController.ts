@@ -39,6 +39,10 @@ export interface TrailMapOptions {
   covered?: () => { top: number; bottom: number }
   /** false: Start points open no popup, for a layout that shows the selected Trail itself */
   popups?: boolean
+  /** the popup's HTML, for a page that links Trails somewhere else (default: `popupHtml`) */
+  popupHtml?: (tr: Trail, lang: Lang, t: (key: string) => string) => string
+  /** Route line styles, for a page in another palette (default: Al-Barari's samar and sunset) */
+  routeStyle?: { route: L.PolylineOptions; selected: L.PolylineOptions }
 }
 
 export interface TrailMap {
@@ -81,6 +85,8 @@ const hasRoutes = (r: Routes | undefined) => !!r && Object.keys(r).length > 0
  *  4. Routes arrive while a Trail is selected: rule 3 again, so the whole Route is framed
  */
 export function createTrailMap(el: HTMLElement, opts: TrailMapOptions): TrailMap {
+  const ROUTE_STYLE = opts.routeStyle ?? { route: ROUTE, selected: ROUTE_ON }
+  const popup = opts.popupHtml ?? popupHtml
   const m = L.map(el, { zoomControl: true, attributionControl: true, maxZoom: 20 }).setView([24.6, 44.5], 6)
   m.attributionControl.setPrefix(false)
   const dropOneFingerZoom = oneFingerZoom(m)
@@ -189,13 +195,13 @@ export function createTrailMap(el: HTMLElement, opts: TrailMapOptions): TrailMap
     for (const tr of s.trails) {
       const r = s.routes[tr.id]
       if (r?.length) {
-        const pl = L.polyline(r, { ...ROUTE, interactive: true })
+        const pl = L.polyline(r, { ...ROUTE_STYLE.route, interactive: true })
         pl.on('click', () => opts.onSelect(tr.id))
         lines.set(tr.id, pl)
       }
       if (!tr.start) continue
       const mk = L.marker(tr.start, { icon: icon(tr, false), title: pick(tr.name, s.lang), keyboard: false })
-      if (opts.popups !== false) mk.bindPopup(popupHtml(tr, s.lang, t))
+      if (opts.popups !== false) mk.bindPopup(popup(tr, s.lang, t))
       mk.on('click', () => opts.onSelect(tr.id))
       markers.set(tr.id, mk)
     }
@@ -209,7 +215,7 @@ export function createTrailMap(el: HTMLElement, opts: TrailMapOptions): TrailMap
       const title = pick(tr.name, lang)
       mk.options.title = title
       mk.getElement()?.setAttribute('title', title)
-      if (mk.getPopup()) mk.setPopupContent(popupHtml(tr, lang, t))
+      if (mk.getPopup()) mk.setPopupContent(popup(tr, lang, t))
     })
   }
 
@@ -218,7 +224,7 @@ export function createTrailMap(el: HTMLElement, opts: TrailMapOptions): TrailMap
       const show = s.visible.has(id)
       if (show && !m.hasLayer(pl)) pl.addTo(m)
       if (!show && m.hasLayer(pl)) pl.remove()
-      pl.setStyle(id === s.selected ? ROUTE_ON : ROUTE)
+      pl.setStyle(id === s.selected ? ROUTE_STYLE.selected : ROUTE_STYLE.route)
       if (id === s.selected && show) pl.bringToFront()
     })
     markers.forEach((mk, id) => {

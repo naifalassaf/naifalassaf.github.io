@@ -306,3 +306,22 @@ describe('satellite imagery', () => {
   })
 })
 
+
+describe('another page’s palette and popups (the Darb mockup)', () => {
+  it('uses a given popup and Route styles in place of its own', async () => {
+    map.destroy()
+    map = createTrailMap(el, {
+      onSelect,
+      onLocate,
+      t,
+      popupHtml: (tr) => `<b class="custom">${tr.id}</b>`,
+      routeStyle: { route: { color: '#004053' }, selected: { color: '#f47b3d' } },
+    })
+    map.update(state({ selected: 'a' }))
+    await moved()
+    expect(popupText()).toBe('<b class="custom">a</b>')
+    const strokes = routeEls().map((p) => p.getAttribute('stroke'))
+    expect(strokes).toContain('#f47b3d')
+    expect(strokes).toContain('#004053')
+  })
+})

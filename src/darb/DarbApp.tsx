@@ -3,7 +3,9 @@ import type { Difficulty, Routes, Trail } from '../trails/types'
 import { difficultyRank, duration, fold, haystack, km, num, pick } from '../trails/format'
 import { REQS, STRINGS, fill, type Lang } from './strings'
 import { Icon, Req, Scenery, UiContext, useUi } from './ui'
-import DarbMap, { type Base } from './DarbMap'
+import DarbMap from './DarbMap'
+import i18n from '../trails/i18n'
+import { useMyLocation, type MyLocation } from '../trails/useMyLocation'
 import TrailPage from './TrailPage'
 import { TRAILS } from './data'
 
@@ -56,24 +58,6 @@ export function useRoutes() {
   return routes
 }
 
-export function useMe() {
-  const [pos, setPos] = useState<[number, number] | null>(null)
-  const locate = () =>
-    new Promise<[number, number] | null>((res) => {
-      if (!navigator.geolocation) return res(null)
-      navigator.geolocation.getCurrentPosition(
-        (p) => {
-          const v: [number, number] = [p.coords.latitude, p.coords.longitude]
-          setPos(v)
-          res(v)
-        },
-        () => res(null),
-        { timeout: 10000, maximumAge: 300000 },
-      )
-    })
-  return { pos, locate }
-}
-
 export default function DarbApp() {
   const [lang, setLang] = useState<Lang>(initialLang)
   const [showReqs, setShowReqs] = useState(true)
@@ -81,14 +65,15 @@ export default function DarbApp() {
   const s = STRINGS[lang]
   const route = useRoute()
   const routes = useRoutes()
-  const me = useMe()
+  const me = useMyLocation()
   const [list, setList] = useState<ListState>(EMPTY)
-  const [base, setBase] = useState<Base>('topo')
 
   useEffect(() => {
     document.documentElement.lang = lang
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'
     document.title = s.docTitle
+    // the shared /trails map reads its language from its own i18n
+    if (i18n.language !== lang) i18n.changeLanguage(lang)
   }, [lang, s])
 
   useEffect(() => {
@@ -164,9 +149,9 @@ export default function DarbApp() {
       </header>
 
       {route.page === 'list' ? (
-        <ListPage state={list} setState={setList} routes={routes} me={me} base={base} setBase={setBase} />
+        <ListPage state={list} setState={setList} routes={routes} me={me} />
       ) : (
-        <TrailPage id={route.id} routes={routes} base={base} setBase={setBase} />
+        <TrailPage id={route.id} routes={routes} me={me} />
       )}
 
       <footer className="foot">
@@ -215,6 +200,19 @@ export default function DarbApp() {
   )
 }
 
+/** phones show one pane at a time (matches the 900px breakpoint in darb.css) */
+function usePhone() {
+  const q = '(max-width: 900px)'
+  const [phone, setPhone] = useState(() => matchMedia(q).matches)
+  useEffect(() => {
+    const mq = matchMedia(q)
+    const on = () => setPhone(mq.matches)
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
+  return phone
+}
+
 const inBucket = (v: number | null, b: Bucket | null, lo: number, hi: number) =>
   !b || (v != null && (b === 'short' ? v < lo : b === 'mid' ? v >= lo && v <= hi : v > hi))
 
@@ -222,15 +220,12 @@ function ListPage(props: {
   state: ListState
   setState: (f: (s: ListState) => ListState) => void
   routes: Routes
-  me: ReturnType<typeof useMe>
-  base: Base
-  setBase: (b: Base) => void
+  me: MyLocation
 }) {
-  const { state: st, setState, routes, me, base, setBase } = props
+  const { state: st, setState, routes, me } = props
   const { s, lang } = useUi()
   const set = <K extends keyof ListState>(k: K, v: ListState[K]) => setState((p) => ({ ...p, [k]: v }))
   const [selected, setSelected] = useState<string | null>(null)
-  const [hovered, setHovered] = useState<string | null>(null)
   const [drawer, setDrawer] = useState(false)
   const [nearNote, setNearNote] = useState<string | null>(null)
 
@@ -274,10 +269,15 @@ function ListPage(props: {
     setNearNote(null)
     if (v === 'near' && !me.pos) {
       setNearNote(s.sort.locating)
-      const p = await me.locate()
-      setNearNote(p ? null : s.sort.noLocation)
+      const r = await me.locateOnce()
+      setNearNote(Array.isArray(r) ? null : s.sort.noLocation)
     }
   }
+
+  const visible = useMemo(() => new Set(shown.map((t) => t.id)), [shown])
+  // the map is created only once it can be seen: a map framed while hidden opens fully zoomed in
+  const phone = usePhone()
+  const mapShown = phone ? st.view === 'map' : st.view !== 'grid'
 
   const select = (id: string) => {
     setSelected(id)
@@ -366,7 +366,6 @@ function ListPage(props: {
                 on={t.id === selected}
                 hasRoute={Boolean(routes[t.id]?.length)}
                 away={st.sort === 'near' && me.pos && t.start ? km(me.pos, t.start) : null}
-                onHover={setHovered}
                 onLocate={() => select(t.id)}
               />
             ))}
@@ -374,7 +373,7 @@ function ListPage(props: {
         </div>
         <div className="map-pane">
           <Req n={1} />
-          <DarbMap trails={shown} routes={routes} selected={selected} hovered={hovered} onSelect={select} base={base} setBase={setBase} />
+          {mapShown && <DarbMap trails={TRAILS} visible={visible} routes={routes} selected={selected} onSelect={select} me={me} />}
         </div>
       </div>
 
@@ -548,18 +547,12 @@ function TrailCard(props: {
   on: boolean
   hasRoute: boolean
   away: number | null
-  onHover: (id: string | null) => void
   onLocate: () => void
 }) {
-  const { t, first, on, hasRoute, away, onHover, onLocate } = props
+  const { t, first, on, hasRoute, away, onLocate } = props
   const { s, lang } = useUi()
   return (
-    <article
-      id={`card-${t.id}`}
-      className={`card${on ? ' on' : ''}`}
-      onMouseEnter={() => onHover(t.id)}
-      onMouseLeave={() => onHover(null)}
-    >
+    <article id={`card-${t.id}`} className={`card${on ? ' on' : ''}`}>
       {first && <Req n={2} />}
       <a href={`#/trail/${t.id}`} className="card-img">
         <Scenery seed={t.id} label={s.photo} />

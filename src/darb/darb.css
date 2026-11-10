@@ -799,7 +799,7 @@ select {
   font-size: 11px;
 }
 
-/* ---------- map ---------- */
+/* ---------- map: the /trails map controller, dressed in Darb's colours ---------- */
 .dmap {
   position: relative;
   width: 100%;
@@ -811,124 +811,282 @@ select {
   border-radius: var(--r-md);
   overflow: hidden;
 }
-.dmap-canvas {
+.dmap #map {
   position: absolute;
   inset: 0;
   background: var(--paper-200);
 }
-.layers {
-  position: absolute;
-  z-index: 500;
+/* brief marker 7 sits by the layer switcher, 1 on the map's far side */
+.dmap > .req {
+  top: 8px;
+  left: 50px;
+  right: auto;
+  z-index: 1001;
+}
+.map-pane > .req {
   top: 12px;
   right: 12px;
-  display: flex;
-  gap: 2px;
-  padding: 4px;
-  border-radius: 12px;
-  background: rgb(255 255 255 / 96%);
-  box-shadow: var(--shadow-2);
-}
-.layers button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 6px 8px;
-  border: 0;
-  border-radius: 9px;
-  background: none;
-  font-size: 12px;
-  cursor: pointer;
-}
-.layers button[aria-pressed='true'] {
-  background: var(--mint-100);
-  color: var(--teal-700);
-  font-weight: 600;
-}
-.swatch {
-  width: 34px;
-  height: 26px;
-  border-radius: 6px;
-  border: 2px solid transparent;
-}
-.layers button[aria-pressed='true'] .swatch {
-  border-color: var(--teal-700);
-}
-.swatch.map {
-  background: linear-gradient(135deg, #f2efe9 40%, #aad3df 40% 55%, #f2efe9 55%), #f2efe9;
-}
-.swatch.sat {
-  background: radial-gradient(circle at 30% 30%, #8a7a5c, #4d4a3a 60%, #3a3f33);
-}
-.swatch.topo {
-  background: repeating-radial-gradient(circle at 60% 60%, #e9dcc0 0 3px, #c9a97a 3px 4px);
-}
-.leaflet-top.leaflet-left {
-  top: 0;
-}
-.dpin {
-  display: block;
-  width: 22px;
-  height: 22px;
-  margin: 3px;
-  border-radius: 50%;
-  background: var(--c, var(--ink-600));
-  border: 3px solid #fff;
-  box-shadow: 0 2px 6px rgb(0 0 0 / 35%);
-  transition: transform 0.15s;
-  color: #fff;
-  font: 700 11px/16px var(--font);
-  text-align: center;
-}
-.dpin.easy {
-  --c: var(--easy);
-}
-.dpin.moderate {
-  --c: var(--moderate);
-}
-.dpin.hard {
-  --c: var(--hard);
-}
-.dpin.hov {
-  transform: scale(1.35);
-}
-.dpin.sel {
-  transform: scale(1.5);
-  --c: var(--orange-500);
-}
-.dpin.start {
-  --c: var(--teal-700);
-  width: 26px;
-  height: 26px;
-  margin: 1px;
-  line-height: 20px;
-}
-.dpin.end {
-  --c: var(--ink-900);
-  width: 26px;
-  height: 26px;
-  margin: 1px;
-  line-height: 20px;
-}
-.dpop {
-  display: grid;
-  gap: 2px;
-  font-family: var(--font);
-  min-width: 160px;
-}
-.dpop b {
-  font-size: 14px;
-}
-.dpop span {
-  color: var(--ink-600);
-}
-.dpop a {
-  color: var(--teal-700);
-  font-weight: 600;
-  margin-top: 4px;
+  left: auto;
+  z-index: 1001;
 }
 .leaflet-container {
   font-family: var(--font);
+}
+.leaflet-control-container {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
+.leaflet-popup-content-wrapper {
+  background: var(--card);
+  color: var(--ink-900);
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-2);
+}
+.leaflet-popup-tip {
+  background: var(--card);
+  box-shadow: none;
+  border: 1px solid var(--line);
+}
+.leaflet-popup-content {
+  font-family: var(--font);
+  margin: 14px 16px;
+  font-size: 14px;
+  line-height: 22px;
+  min-width: 200px;
+}
+.leaflet-popup-content .pt {
+  display: block;
+  font-size: 17px;
+  line-height: 26px;
+  font-weight: 700;
+  color: var(--teal-700);
+}
+.leaflet-popup-content .pm {
+  color: var(--ink-600);
+  font-variant-numeric: tabular-nums;
+}
+.leaflet-popup-content .pa {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+.leaflet-popup-content a {
+  color: var(--teal-700);
+  font-weight: 600;
+}
+.leaflet-popup-content a.pbtn {
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: var(--teal-700);
+  color: #fff;
+  text-decoration: none;
+}
+.leaflet-popup-close-button {
+  color: var(--ink-600) !important;
+}
+.pill {
+  display: inline-block;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 20px;
+  color: #fff;
+}
+.pill.easy {
+  background: var(--easy);
+}
+.pill.moderate {
+  background: var(--moderate);
+}
+.pill.hard {
+  background: var(--hard);
+}
+.leaflet-bar,
+.leaflet-control-layers {
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-sm) !important;
+  box-shadow: var(--shadow-1) !important;
+}
+.leaflet-bar a {
+  background: var(--card);
+  color: var(--teal-700);
+  border-bottom-color: var(--line);
+}
+.leaflet-bar a:hover {
+  background: var(--mint-100);
+  color: var(--teal-700);
+}
+.leaflet-control-layers {
+  background: var(--card);
+  color: var(--ink-900);
+  padding: 6px 8px;
+}
+.leaflet-control-layers label {
+  font-size: 14px;
+  line-height: 22px;
+}
+.leaflet-control-layers input {
+  accent-color: var(--teal-700);
+}
+.leaflet-control-attribution {
+  background: rgb(255 255 255 / 88%) !important;
+  color: var(--ink-600) !important;
+  font-size: 11px;
+}
+.leaflet-control-attribution a {
+  color: var(--teal-700) !important;
+}
+/* Start points: a white dot ringed in teal; the selected one in the logo's orange */
+.mk {
+  display: block;
+  width: 15px;
+  height: 15px;
+  border-radius: 999px;
+  box-sizing: border-box;
+}
+.mk.darb {
+  background: #fff;
+  border: 3px solid var(--teal-700);
+}
+.mk.sel {
+  width: 21px;
+  height: 21px;
+  background: var(--orange-500);
+  border: 3px solid var(--teal-700);
+}
+.legend {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-1);
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-900);
+  direction: rtl;
+}
+html[lang='en'] .legend {
+  direction: ltr;
+}
+.legend div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.legend div + div {
+  margin-top: 3px;
+}
+.legend .ln {
+  display: block;
+  width: 15px;
+  height: 3px;
+  background: var(--teal-700);
+}
+.google-logo {
+  display: block;
+  line-height: 0;
+  margin: 0 6px 2px 0 !important;
+}
+.google-logo img {
+  display: block;
+}
+.me {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #2563eb;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 25%), 0 1px 4px rgb(0 0 0 / 35%);
+  animation: me-pulse 2.4s ease-out infinite;
+}
+@keyframes me-pulse {
+  0% {
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 25%), 0 0 0 0 rgb(37 99 235 / 45%);
+  }
+  70% {
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 25%), 0 0 0 14px rgb(37 99 235 / 0%);
+  }
+  100% {
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 25%), 0 0 0 0 rgb(37 99 235 / 0%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .me {
+    animation: none;
+  }
+}
+.me-ring {
+  fill: #2563eb;
+  fill-opacity: 0.1;
+  stroke: #2563eb;
+  stroke-opacity: 0.35;
+  stroke-width: 1;
+}
+.locate a {
+  display: grid !important;
+  place-items: center;
+}
+.locate a.busy svg {
+  animation: locate-spin 1s linear infinite;
+}
+@keyframes locate-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.locate-help {
+  position: absolute;
+  z-index: 1000;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(360px, calc(100% - 24px));
+  padding: 16px;
+  background: var(--card);
+  color: var(--ink-900);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-2);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.55;
+}
+.locate-help p {
+  margin: 0 0 8px;
+}
+.locate-help .lh-title {
+  font-weight: 700;
+  font-size: 15px;
+}
+.locate-help ol {
+  margin: 0 0 12px;
+  padding-inline-start: 20px;
+}
+.locate-help .lh-actions {
+  display: flex;
+  gap: 8px;
+}
+.locate-help button {
+  min-height: 40px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--teal-700);
+  background: var(--teal-700);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.locate-help button.quiet {
+  background: transparent;
+  color: var(--ink-900);
+  border-color: var(--line);
 }
 
 /* ---------- filter drawer ---------- */

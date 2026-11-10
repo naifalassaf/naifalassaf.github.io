@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import 'leaflet/dist/leaflet.css'
 import { useTranslation } from 'react-i18next'
 import type { Lang, Routes, Trail } from './types'
+import type { TrailMapOptions } from './mapController'
 import { googleSatellite } from './googleSatellite'
 import { createTrailMap, type TrailMap as Controller } from './mapController'
 import type { MyLocation } from './useMyLocation'
@@ -19,6 +20,9 @@ interface Props {
   me: MyLocation
   /** false: no popups, for a layout that shows the selected Trail itself (read once, at mount) */
   popups?: boolean
+  /** a page in another palette or linking elsewhere: its popup HTML and Route styles (read once, at mount) */
+  popupHtml?: TrailMapOptions['popupHtml']
+  routeStyle?: TrailMapOptions['routeStyle']
   /** px hidden under the page's own overlays at the map's top and bottom edges */
   covered?: () => { top: number; bottom: number }
 }
@@ -34,7 +38,7 @@ function platform(): 'ios' | 'android' | 'desktop' {
 }
 
 /** React's side of the map: owns the visitor's location and the help dialog; the map controller draws. */
-export default function TrailMap({ trails, visible, selected, routes, onSelect, me, popups, covered }: Props) {
+export default function TrailMap({ trails, visible, selected, routes, onSelect, me, popups, popupHtml, routeStyle, covered }: Props) {
   const { t, i18n } = useTranslation()
   const lang = i18n.language as Lang
   const el = useRef<HTMLDivElement>(null)
@@ -65,6 +69,8 @@ export default function TrailMap({ trails, visible, selected, routes, onSelect, 
       loadSatellite: GOOGLE_KEY ? () => googleSatellite(GOOGLE_KEY) : undefined,
       covered: () => latest.current.covered?.() ?? { top: 0, bottom: 0 },
       popups,
+      popupHtml,
+      routeStyle,
     })
     map.current = c
     return () => {

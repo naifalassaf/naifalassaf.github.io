@@ -1,18 +1,22 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { Routes, Trail } from '../trails/types'
 import { duration, km, num, pick } from '../trails/format'
 import { fill } from './strings'
 import { Icon, Req, Scenery, useUi } from './ui'
-import DarbMap, { type Base } from './DarbMap'
+import DarbMap from './DarbMap'
+import type { MyLocation } from '../trails/useMyLocation'
 import { TRAILS } from './data'
 import { Level, Stats } from './DarbApp'
 import { saveFile, toGpx, toKml, toKmz } from './exports'
 
 const PHOTOS = 5
 
-export default function TrailPage({ id, routes, base, setBase }: { id: string; routes: Routes; base: Base; setBase: (b: Base) => void }) {
+export default function TrailPage({ id, routes, me }: { id: string; routes: Routes; me: MyLocation }) {
   const { s, lang } = useUi()
   const t = TRAILS.find((x) => x.id === id)
+  // stable per Trail, so the map doesn't redraw on every render
+  const one = useMemo(() => (t ? [t] : []), [t])
+  const oneId = useMemo(() => new Set(t ? [t.id] : []), [t])
   const [lightbox, setLightbox] = useState<number | null>(null)
   const [share, setShare] = useState(false)
 
@@ -97,10 +101,10 @@ export default function TrailPage({ id, routes, base, setBase }: { id: string; r
               <p className="muted small">{s.trail.aboutNote}</p>
             </section>
 
-            <section className="panel" id="map">
+            <section className="panel" id="trail-map">
               <h2>{s.trail.map}</h2>
               {t.start || lines.length ? (
-                <DarbMap trails={[t]} routes={routes} single={t} base={base} setBase={setBase} className="tall" />
+                <DarbMap key={t.id} trails={one} visible={oneId} selected={t.id} routes={routes} onSelect={() => {}} me={me} popups={false} className="tall" />
               ) : (
                 <p className="muted">{s.trail.noStart}</p>
               )}
@@ -155,7 +159,7 @@ export default function TrailPage({ id, routes, base, setBase }: { id: string; r
 
       {/* phones: the three actions stay in reach */}
       <div className="actionbar">
-        <a href={t.start ? gmaps(t.start) : '#map'} target={t.start ? '_blank' : undefined} rel="noopener" className="btn primary">
+        <a href={t.start ? gmaps(t.start) : '#trail-map'} target={t.start ? '_blank' : undefined} rel="noopener" className="btn primary">
           <Icon k="nav" size={18} />
           {s.trail.getThere}
         </a>
