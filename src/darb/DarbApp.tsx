@@ -132,15 +132,9 @@ export default function DarbApp() {
       <header className="top">
         <div className="top-in">
           <a href="#/" className="wordmark" aria-label={s.brand}>
-            <svg viewBox="0 0 32 32" width="34" height="34" aria-hidden="true">
-              <rect width="32" height="32" rx="9" fill="var(--green-700)" />
-              <path d="M6 23c4-1 5-6 9-6s4 4 7 3 3-6 4-9" fill="none" stroke="var(--sand-50)" strokeWidth="2.6" strokeLinecap="round" />
-              <circle cx="26" cy="10" r="2.4" fill="var(--sun-500)" />
-            </svg>
-            <span>
-              <b>{s.brand}</b>
-              <small>{s.brandSub}</small>
-            </span>
+            {/* Darb's own logo, the white-wordmark version from darb.org, for the teal bar */}
+            <img src="/darb/logo-white.png" alt="" width="76" height="40" />
+            <small>{s.brandSub}</small>
           </a>
           <nav className="mainnav" aria-label="main">
             <a href="#/" aria-current="page">
@@ -177,6 +171,7 @@ export default function DarbApp() {
 
       <footer className="foot">
         <div className="foot-in">
+          <img src="/darb/logo-white.png" alt={s.brand} width="91" height="48" className="foot-logo" />
           <p>{s.footer.note}</p>
           <p className="muted">{s.footer.sources}</p>
         </div>

@@ -91,7 +91,7 @@ export default function DarbMap({ trails, routes, selected, hovered, onSelect, s
     const pts: L.LatLngExpression[] = []
     lines.forEach((l) => {
       L.polyline(l, { color: '#fff', weight: 8, opacity: 0.9 }).addTo(g)
-      L.polyline(l, { color: '#d9622b', weight: 4.5 }).addTo(g)
+      L.polyline(l, { color: '#f47b3d', weight: 4.5 }).addTo(g)
       pts.push(...l)
     })
     if (single.start) {
@@ -125,7 +125,7 @@ export default function DarbMap({ trails, routes, selected, hovered, onSelect, s
       mk.addTo(g)
       markers.current.set(tr.id, mk)
     })
-    if (selected) (routes[selected] ?? []).forEach((l) => L.polyline(l, { color: '#d9622b', weight: 4 }).addTo(g))
+    if (selected) (routes[selected] ?? []).forEach((l) => L.polyline(l, { color: '#f47b3d', weight: 4 }).addTo(g))
   }, [single, trails, routes, selected, hovered, lang, s])
 
   // list mode: frame the shown Trails when the set changes

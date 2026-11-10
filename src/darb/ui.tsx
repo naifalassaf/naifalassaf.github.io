@@ -66,16 +66,17 @@ function rng(seed: string) {
   }
 }
 
+/* Darb's palette: mint sky like the top of the pin, orange-to-rust ridges like its road */
 const SKIES = [
-  ['#f6d6a8', '#e9a46c', '#b65d3a'], // dusk
-  ['#cfe3ef', '#e9eef0', '#f3e4cc'], // morning
-  ['#9fc4dd', '#d7e6ec', '#eedcbf'], // noon
-  ['#f4c9a0', '#f1dcc0', '#cfd9da'], // dawn
+  ['#9ad6cc', '#d5eeeb', '#f1f2ec'], // mint
+  ['#bfe3dc', '#e6f3f0', '#f6e3d3'], // morning
+  ['#f8c6a6', '#f9dcc7', '#dff5f3'], // dawn
+  ['#7cc4b9', '#c8e8e2', '#f1f2ec'], // noon
 ]
 const RIDGES = [
-  ['#c9a27a', '#a8774f', '#7c5235', '#4f3424'],
-  ['#b9a58b', '#94795d', '#6c5643', '#3f3329'],
-  ['#d3b48e', '#b38a60', '#8a6141', '#5a3d2a'],
+  ['#f9a77a', '#f47b3d', '#c85a2a', '#8f3c1f'],
+  ['#e9b48f', '#d9824f', '#b04f27', '#004053'],
+  ['#f3b48b', '#e47a45', '#a9462a', '#5e2c19'],
 ]
 
 /** Illustrated stand-in for a trail photo: sky, three ridges, foreground. */

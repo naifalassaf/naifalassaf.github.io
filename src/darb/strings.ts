@@ -21,7 +21,7 @@ export const REQS: { n: number; where: 'list' | 'trail'; ar: string; en: string 
 const ar = {
   docTitle: 'درب — نموذج تصميمي مقترح',
   brand: 'درب',
-  brandSub: 'جمعية درب للمسارات',
+  brandSub: 'جمعية درب',
   mockup: 'نموذج تصميمي مقترح لموقع درب — للعرض فقط، وليس الموقع الرسمي. الصور توضيحية.',
   nav: { trails: 'المسارات', events: 'الفعاليات', about: 'عن درب', app: 'التطبيق' },
   switchLang: 'English',
@@ -83,7 +83,7 @@ const ar = {
     copyCoords: 'نسخ الإحداثيات',
     copied: 'تم النسخ',
     download: 'تحميل ملفات المسار',
-    downloadSub: 'للاستخدام في تطبيقات الملاحة والساعات الذكية وGoogle Earth.',
+    downloadSub: 'لبرنامج Google Earth وتطبيقات الملاحة والساعات الذكية.',
     gpx: 'لتطبيقات الملاحة والساعات',
     kml: 'يفتح في Google Earth وخرائط Google',
     kmz: 'ملف KML مضغوط',
@@ -126,7 +126,7 @@ type Dict = typeof ar
 const en: Dict = {
   docTitle: 'Darb — proposed design mockup',
   brand: 'Darb',
-  brandSub: 'Darb Trails Association',
+  brandSub: 'Darb Association',
   mockup: 'A proposed design mockup for the Darb website — for review only, not the official site. Photos are placeholders.',
   nav: { trails: 'Trails', events: 'Events', about: 'About Darb', app: 'App' },
   switchLang: 'العربية',
