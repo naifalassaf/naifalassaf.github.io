@@ -27,7 +27,7 @@ export function toKml(name: string, lines: Pt[][], start: Pt | null): string {
   const route = lines.length
     ? `    <Placemark>
       <name>${xml(name)}</name>
-      <Style><LineStyle><color>ff2f6ad9</color><width>4</width></LineStyle></Style>
+      <Style><LineStyle><color>ff3d7bf4</color><width>4</width></LineStyle></Style>
       <MultiGeometry>
 ${lines.map((l) => `        <LineString><tessellate>1</tessellate><coordinates>${l.map(([la, lo]) => `${lo},${la}`).join(' ')}</coordinates></LineString>`).join('\n')}
       </MultiGeometry>
