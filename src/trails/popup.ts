@@ -2,7 +2,7 @@ import type { Lang, Trail } from './types'
 import { duration, esc, num, pick } from './format'
 
 /**
- * The HTML inside a Start point's popup: name, Source and place, stats, difficulty,
+ * The HTML inside a Start point's popup: name, Source and place, stats (with the Shape), difficulty,
  * coordinates, and links to the Source's page and Google Maps. Every piece of Trail text
  * is escaped. Only call it for a Trail with a Start point.
  */
@@ -10,6 +10,7 @@ export function popupHtml(tr: Trail, lang: Lang, t: (key: string) => string): st
   const place = [t(`source.${tr.source}`), pick(tr.region, lang), pick(tr.city, lang)].filter(Boolean).map(esc).join(' · ')
   const stats = [
     tr.lengthKm != null && `${num(lang, tr.lengthKm)} ${t('unit.km')}`,
+    tr.shape && t(`shape.${tr.shape}`),
     tr.highM != null && `${t('stat.high')} ${num(lang, tr.highM, 0)} ${t('unit.m')}`,
     tr.duration && duration(tr.duration, lang, { h: t('unit.h'), min: t('unit.min') }),
   ]

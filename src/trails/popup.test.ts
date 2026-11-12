@@ -33,6 +33,11 @@ describe('popupHtml', () => {
     expect(html).toContain('query=21.1476,40.3024')
   })
 
+  it('says whether the Trail is a loop, out-and-back or one-way', () => {
+    expect(popupHtml(trail('1', { shape: 'one-way' }), 'en', t)).toContain('[shape.one-way]')
+    expect(popupHtml(trail('1', { shape: null }), 'en', t)).not.toContain('[shape.')
+  })
+
   it('labels the page link by whose page it is, when that isn’t the Source', () => {
     const html = popupHtml(trail('8', { start: [27.5, 41.6], pageOf: 'schf' }), 'en', t)
     expect(html).toContain('[link.schf]')

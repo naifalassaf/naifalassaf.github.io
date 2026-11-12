@@ -251,6 +251,7 @@ export default function PhoneLayout(p: PhoneProps) {
               {sel.gainM != null && <Stat label={t('stat.gain')} value={num(lang, sel.gainM, 0)} unit={t('unit.m')} />}
               {sel.highM != null && <Stat label={t('stat.high')} value={num(lang, sel.highM, 0)} unit={t('unit.m')} />}
               {sel.duration && <Stat label={t('stat.time')} value={duration(sel.duration, lang, u)} />}
+              {sel.shape && <Stat label={t('stat.shape')} value={t(`shape.${sel.shape}`)} />}
             </dl>
             <TrailLinks tr={sel} lang={lang} className="links" mapsFirst />
           </div>
@@ -323,7 +324,9 @@ export default function PhoneLayout(p: PhoneProps) {
                         </span>
                         <span className="row-meta">
                           <b>{tr.lengthKm != null ? `${num(lang, tr.lengthKm)} ${t('unit.km')}` : '—'}</b>
-                          {tr.duration && <small>{duration(tr.duration, lang, u)}</small>}
+                          {(tr.duration || tr.shape) && (
+                            <small>{[tr.duration && duration(tr.duration, lang, u), tr.shape && t(`shape.${tr.shape}`)].filter(Boolean).join(' · ')}</small>
+                          )}
                         </span>
                       </button>
                     </li>

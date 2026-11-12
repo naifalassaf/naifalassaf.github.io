@@ -8,6 +8,9 @@
  * Sources: KSRNR (snapshot), Darb (live API), Asir (snapshot of the Aseer Development
  * Authority's outdoor guide). The site shows KSRNR and Asir only with ?dev=true.
  *
+ * Every Trail's Shape (loop, out-and-back or one-way) is read from its Route by routeShape();
+ * trail-shapes.json holds the ones set by hand, for Trails with no Route or where the line misleads.
+ *
  * Outputs (both committed):
  *   src/trails/data/trails.json   every Trail, normalised and bilingual
  *   public/data/trail-routes.json     every Route, as simplified [lat, lon] lines keyed by Trail id
@@ -128,6 +131,40 @@ export function simplify(line, tol = 6) {
 }
 const round = ([a, b]) => [Math.round(a * 1e5) / 1e5, Math.round(b * 1e5) / 1e5]
 const lineKm = (lines) => lines.reduce((s, l) => s + l.slice(1).reduce((t, p, i) => t + metres(l[i], p), 0), 0) / 1000
+
+/* ---------- Shape ---------- */
+
+/** a line's points at most `step` metres apart */
+function resample(line, step = 20) {
+  const out = [line[0]]
+  for (let i = 1; i < line.length; i++) {
+    const n = Math.max(1, Math.ceil(metres(line[i - 1], line[i]) / step))
+    for (let k = 1; k <= n; k++) out.push([line[i - 1][0] + (line[i][0] - line[i - 1][0]) * k / n, line[i - 1][1] + (line[i][1] - line[i - 1][1]) * k / n])
+  }
+  return out
+}
+
+/**
+ * A Trail's Shape from its Route, or null with no Route.
+ * - Ends within 250 m (or 5% of the line) of where it began: a loop, unless the way back
+ *   retraces the way out (60%+ of the return within 40 m of the outbound), then out-and-back.
+ * - Ends elsewhere: one-way, unless the published length is 1.6× the drawn line or more,
+ *   which means the Source drew one direction of an out-and-back.
+ * The line is split at its farthest point from the start into "out" and "back".
+ */
+export function routeShape(lines, publishedKm) {
+  const pts = (lines ?? []).flat()
+  if (pts.length < 2) return null
+  const drawnM = lineKm(lines) * 1000
+  const closed = metres(pts[0], pts.at(-1)) <= Math.max(250, drawnM * 0.05)
+  if (!closed) return publishedKm != null && publishedKm * 1000 >= drawnM * 1.6 ? 'out-and-back' : 'one-way'
+  let far = 0, farM = 0
+  pts.forEach((p, i) => { const d = metres(pts[0], p); if (d > farM) { farM = d; far = i } })
+  const out = pts.slice(0, far + 1), back = resample(pts.slice(far))
+  if (out.length < 2) return 'loop'
+  const near = back.filter((p) => out.some((a, i) => i > 0 && segDist(p, out[i - 1], a) < 40)).length
+  return near / back.length >= 0.6 ? 'out-and-back' : 'loop'
+}
 
 /* ---------- KSRNR ---------- */
 
@@ -293,11 +330,18 @@ d.trails = [...d.trails.filter((t) => !extraIds.has(t.id)), ...x.trails.map((t) 
 d.routes = { ...d.routes, ...x.routes }
 if (x.trails.length) console.log(`Darb extras (by hand): ${x.trails.length}`)
 
+const allRoutes = { ...k.routes, ...d.routes, ...a.routes }
+
+// Shape: set by hand wins, then the Route's; null when neither knows
+const byHand = (await readJson(resolve(HERE, 'trail-shapes.json'), { shapes: {} })).shapes
+const trails = [...k.trails, ...d.trails, ...a.trails].map((t) => ({ ...t, shape: byHand[t.id]?.shape ?? routeShape(allRoutes[t.id], t.lengthKm) }))
+const unknown = trails.filter((t) => !t.shape).map((t) => t.id)
+if (unknown.length) console.warn(`::warning::No shape for ${unknown.join(', ')}: add them to scripts/trails/trail-shapes.json`)
+
 await writeJson(OUT_TRAILS, {
   sources: { ksrnr: { asOf: k.asOf }, darb: { asOf: d.asOf }, asir: { asOf: a.asOf } },
-  trails: [...k.trails, ...d.trails, ...a.trails],
+  trails,
 })
-const allRoutes = { ...k.routes, ...d.routes, ...a.routes }
 await writeJson(OUT_ROUTES, allRoutes)
-console.log(`Wrote ${k.trails.length + d.trails.length + a.trails.length} trails, ${Object.keys(allRoutes).length} routes`)
+console.log(`Wrote ${trails.length} trails, ${Object.keys(allRoutes).length} routes`)
 }

@@ -1,0 +1,12 @@
+{
+  "_note": "Trail Shapes set by hand: for Trails with no Route, or where the Route gives the wrong answer. These win over the Shape the build reads from the Route. Each says where it comes from.",
+  "shapes": {
+    "darb-2787": { "shape": "one-way", "why": "No Route. Darb: يمتد المسار من الماردية وصولًا إلى قارح (Al-Mardiyah to Qarh)." },
+    "asir-ghaithan": { "shape": "one-way", "why": "No Route. The Asir guide gives separate start and end points." },
+    "asir-dalghan": { "shape": "one-way", "why": "No Route. The Asir guide gives it as one way." },
+    "asir-shibanah": { "shape": "one-way", "why": "No Route. The Asir guide gives separate start and end points, 2.7 km apart." },
+    "asir-raheel": { "shape": "one-way", "why": "No Route. The Asir guide gives separate start and end points, 2 km apart." },
+    "asir-qalamain": { "shape": "one-way", "why": "No Route. The Asir guide gives separate start and end points." },
+    "asir-madanah": { "shape": "out-and-back", "why": "No Route. The Asir guide gives it as a return walk: 10 km in all, ending about 5 km from the start." }
+  }
+}

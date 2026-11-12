@@ -35,3 +35,7 @@ _Avoid_: trailhead, location, pin
 **Route** (خط المسار):
 The full drawn line of a Trail, as opposed to its Start point.
 _Avoid_: track, KML, path
+
+**Shape** (نوع المسار):
+How a Trail goes: a **Loop** (دائري) comes back to its Start point another way, an **Out-and-back** (ذهاب وعودة) comes back the same way, and a **One-way** (اتجاه واحد) Trail ends somewhere else. Read from the Route, or set by hand where there's no Route.
+_Avoid_: circular, linear, return, round trip

@@ -25,6 +25,10 @@ const Icon = {
   ),
   route: <path d="M5 19c4 0 3-6 7-6s3-6 7-6" />,
   filter: <path d="M4 6h16M7 12h10M10 18h4" />,
+  // Shapes: a ring with an arrowhead, a there-and-back pair of arrows, a single arrow (drawn left to right; RTL flips it)
+  loop: <path d="M19 12a7 7 0 1 1-2.05-4.95M19 4v4h-4" />,
+  'out-and-back': <path d="M4 9h15M15 5l4 4M20 15H5M9 19l-4-4" />,
+  'one-way': <path d="M4 12h15M14 7l5 5-5 5" />,
 }
 export const Svg = ({ k }: { k: keyof typeof Icon }) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">

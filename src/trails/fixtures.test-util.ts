@@ -15,6 +15,7 @@ export function trail(id: string, over: Partial<Trail> = {}): Trail {
     gainM: null,
     duration: [120, 120],
     difficulty: 'easy',
+    shape: 'loop',
     start: [24.7, 46.6],
     page: { ar: `https://darb.org/tracks/${id}/1`, en: `https://darb.org/en/tracks/${id}/1` },
     download: null,

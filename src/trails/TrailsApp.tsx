@@ -357,6 +357,12 @@ function TrailItem(props: { tr: Trail; lang: Lang; on: boolean; hasRoute: boolea
             <span className="u">{t('unit.km')}</span>
           </i>
         )}
+        {tr.shape && (
+          <i title={t('stat.shape')} className="shape">
+            <Svg k={tr.shape} />
+            {t(`shape.${tr.shape}`)}
+          </i>
+        )}
         {tr.highM != null && (
           <i title={t('stat.high')}>
             <Svg k="elev" />

@@ -318,6 +318,10 @@ html[lang='en'] .alt {
   color: var(--ink-600);
   font-weight: 400;
 }
+/* the Shape icons point the way you read */
+[dir='rtl'] .data .shape svg {
+  transform: scaleX(-1);
+}
 
 /* difficulty — a lightness ramp, not a hue pair; the accent is never spent here */
 .pill {
