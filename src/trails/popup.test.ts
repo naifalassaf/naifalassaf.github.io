@@ -17,7 +17,7 @@ describe('popupHtml', () => {
   })
 
   it('leaves out stats the Source did not publish', () => {
-    const html = popupHtml(trail('1', { lengthKm: null, highM: null, duration: null, difficulty: null }), 'en', t)
+    const html = popupHtml(trail('1', { lengthKm: null, highM: null, duration: null, difficulty: null, shape: null }), 'en', t)
     expect(html).not.toContain('[unit.km]')
     expect(html).not.toContain('[stat.high]')
     expect(html).not.toContain('pill')
@@ -34,7 +34,7 @@ describe('popupHtml', () => {
   })
 
   it('says whether the Trail is a loop, out-and-back or one-way', () => {
-    expect(popupHtml(trail('1', { shape: 'one-way' }), 'en', t)).toContain('[shape.one-way]')
+    expect(popupHtml(trail('1', { shape: 'one-way' }), 'en', t)).toContain('<span class="pill shape">[shape.one-way]</span>')
     expect(popupHtml(trail('1', { shape: null }), 'en', t)).not.toContain('[shape.')
   })
 

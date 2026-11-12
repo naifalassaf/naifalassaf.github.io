@@ -36,6 +36,23 @@ export const Svg = ({ k }: { k: keyof typeof Icon }) => (
   </svg>
 )
 
+/** a Trail's tags: difficulty, with its Shape under it */
+export function Tags({ tr }: { tr: Trail }) {
+  const { t } = useTranslation()
+  if (!tr.difficulty && !tr.shape) return null
+  return (
+    <span className="tags">
+      {tr.difficulty && <span className={`pill ${tr.difficulty}`}>{t(`difficulty.${tr.difficulty}`)}</span>}
+      {tr.shape && (
+        <span className="pill shape" title={t('stat.shape')}>
+          <Svg k={tr.shape} />
+          {t(`shape.${tr.shape}`)}
+        </span>
+      )}
+    </span>
+  )
+}
+
 export function Chips<V extends string>(props: {
   label: string
   all: string

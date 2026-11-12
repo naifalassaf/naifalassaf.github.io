@@ -2,7 +2,7 @@ import type { Lang, Trail } from './types'
 import { duration, esc, num, pick } from './format'
 
 /**
- * The HTML inside a Start point's popup: name, Source and place, stats (with the Shape), difficulty,
+ * The HTML inside a Start point's popup: name, Source and place, stats, difficulty and Shape tags,
  * coordinates, and links to the Source's page and Google Maps. Every piece of Trail text
  * is escaped. Only call it for a Trail with a Start point.
  */
@@ -10,7 +10,6 @@ export function popupHtml(tr: Trail, lang: Lang, t: (key: string) => string): st
   const place = [t(`source.${tr.source}`), pick(tr.region, lang), pick(tr.city, lang)].filter(Boolean).map(esc).join(' · ')
   const stats = [
     tr.lengthKm != null && `${num(lang, tr.lengthKm)} ${t('unit.km')}`,
-    tr.shape && t(`shape.${tr.shape}`),
     tr.highM != null && `${t('stat.high')} ${num(lang, tr.highM, 0)} ${t('unit.m')}`,
     tr.duration && duration(tr.duration, lang, { h: t('unit.h'), min: t('unit.min') }),
   ]
@@ -24,6 +23,7 @@ export function popupHtml(tr: Trail, lang: Lang, t: (key: string) => string): st
     `<span class="pm">${place}</span><br>` +
     `<span class="pm">${stats}</span>` +
     (tr.difficulty ? ` <span class="pill ${tr.difficulty}">${esc(t(`difficulty.${tr.difficulty}`))}</span>` : '') +
+    (tr.shape ? ` <span class="pill shape">${esc(t(`shape.${tr.shape}`))}</span>` : '') +
     `<br><span class="pm coords">${la.toFixed(5)}, ${lo.toFixed(5)}</span><br>` +
     `<a href="${esc(tr.page[lang])}" target="_blank" rel="noopener">${esc(t(`link.${tr.pageOf ?? tr.source}`))}</a>` +
     ` · <a href="https://www.google.com/maps/search/?api=1&query=${la},${lo}" target="_blank" rel="noopener">${esc(t('link.gmaps'))}</a>` +

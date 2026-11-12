@@ -318,10 +318,6 @@ html[lang='en'] .alt {
   color: var(--ink-600);
   font-weight: 400;
 }
-/* the Shape icons point the way you read */
-[dir='rtl'] .data .shape svg {
-  transform: scaleX(-1);
-}
 
 /* difficulty — a lightness ramp, not a hue pair; the accent is never spent here */
 .pill {
@@ -344,6 +340,33 @@ html[lang='en'] .alt {
 .pill.hard {
   background: var(--ink-900);
   color: var(--sand-100);
+}
+/* the Shape: an outlined tag, so it never reads as a fourth difficulty */
+.pill.shape {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 10px;
+  border: 1px solid var(--hairline);
+  color: var(--ink-900);
+}
+.pill.shape svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  color: var(--samar-700);
+}
+/* its icon points the way you read */
+[dir='rtl'] .pill.shape svg {
+  transform: scaleX(-1);
+}
+/* difficulty with the Shape stacked under it, both flush with the heading's far edge */
+.tags {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  align-self: flex-start;
 }
 
 .links {

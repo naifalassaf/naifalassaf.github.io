@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import TrailMap from './TrailMap'
 import { LOCKUP_SVG } from './lockup'
 import { duration, km, num, pick } from './format'
-import { Chips, Svg, TrailLinks, type FilterGroup, type Sort } from './parts'
+import { Chips, Svg, Tags, TrailLinks, type FilterGroup, type Sort } from './parts'
 import { heightOf, NEXT, settle, TOP, type Snap } from './sheet'
 import type { Lang, Routes, Trail } from './types'
 import type { MyLocation } from './useMyLocation'
@@ -236,7 +236,7 @@ export default function PhoneLayout(p: PhoneProps) {
                 {pick(sel.name, lang)}
                 {lang === 'en' && sel.nameEnOurs && <sup title={t('about.oursEn')}>*</sup>}
               </span>
-              {sel.difficulty && <span className={`pill ${sel.difficulty}`}>{t(`difficulty.${sel.difficulty}`)}</span>}
+              <Tags tr={sel} />
             </h2>
             {sel.name[other] && (
               <p className="alt" lang={other} dir={other === 'ar' ? 'rtl' : 'ltr'}>
@@ -251,7 +251,6 @@ export default function PhoneLayout(p: PhoneProps) {
               {sel.gainM != null && <Stat label={t('stat.gain')} value={num(lang, sel.gainM, 0)} unit={t('unit.m')} />}
               {sel.highM != null && <Stat label={t('stat.high')} value={num(lang, sel.highM, 0)} unit={t('unit.m')} />}
               {sel.duration && <Stat label={t('stat.time')} value={duration(sel.duration, lang, u)} />}
-              {sel.shape && <Stat label={t('stat.shape')} value={t(`shape.${sel.shape}`)} />}
             </dl>
             <TrailLinks tr={sel} lang={lang} className="links" mapsFirst />
           </div>
