@@ -360,13 +360,17 @@ html[lang='en'] .alt {
 [dir='rtl'] .pill.shape svg {
   transform: scaleX(-1);
 }
-/* difficulty with the Shape stacked under it, both flush with the heading's far edge */
+/* difficulty with the Shape stacked under it, both as wide as the wider one */
 .tags {
   display: inline-flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: stretch;
   gap: 4px;
   align-self: flex-start;
+}
+.tags .pill {
+  justify-content: center;
+  text-align: center;
 }
 
 .links {
