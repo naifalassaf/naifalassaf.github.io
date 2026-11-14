@@ -17,7 +17,7 @@ describe('popupHtml', () => {
   })
 
   it('leaves out stats the Source did not publish', () => {
-    const html = popupHtml(trail('1', { lengthKm: null, highM: null, duration: null, difficulty: null }), 'en', t)
+    const html = popupHtml(trail('1', { lengthKm: null, highM: null, duration: null, difficulty: null, shape: null }), 'en', t)
     expect(html).not.toContain('[unit.km]')
     expect(html).not.toContain('[stat.high]')
     expect(html).not.toContain('pill')
@@ -31,6 +31,11 @@ describe('popupHtml', () => {
     expect(html).toContain('21.14760, 40.30240')
     expect(html).toContain('href="https://darb.org/tracks/7/1"')
     expect(html).toContain('query=21.1476,40.3024')
+  })
+
+  it('says whether the Trail is a loop, out-and-back or one-way', () => {
+    expect(popupHtml(trail('1', { shape: 'one-way' }), 'en', t)).toContain('<span class="pill shape">[shape.one-way]</span>')
+    expect(popupHtml(trail('1', { shape: null }), 'en', t)).not.toContain('[shape.')
   })
 
   it('labels the page link by whose page it is, when that isn’t the Source', () => {

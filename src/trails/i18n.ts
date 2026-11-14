@@ -38,8 +38,9 @@ const ar = {
   },
   source: { ksrnr: 'محمية الملك سلمان', darb: 'جمعية درب', asir: 'هيئة تطوير عسير' },
   difficulty: { easy: 'سهل', moderate: 'متوسط', hard: 'صعب' },
+  shape: { loop: 'دائري', 'out-and-back': 'ذهاب وعودة', 'one-way': 'اتجاه واحد' },
   unit: { km: 'كم', m: 'م', h: 'س', min: 'د' },
-  stat: { length: 'الطول', high: 'أعلى نقطة', gain: 'الصعود', time: 'المدة', away: 'المسافة منك' },
+  stat: { length: 'الطول', high: 'أعلى نقطة', gain: 'الصعود', time: 'المدة', away: 'المسافة منك', shape: 'نوع المسار' },
   link: {
     ksrnr: 'الصفحة الرسمية',
     darb: 'صفحة درب',
@@ -140,8 +141,9 @@ const en: typeof ar = {
   },
   source: { ksrnr: 'King Salman Royal Reserve', darb: 'Darb', asir: 'Aseer Development Authority' },
   difficulty: { easy: 'Easy', moderate: 'Moderate', hard: 'Hard' },
+  shape: { loop: 'Loop', 'out-and-back': 'Out and back', 'one-way': 'One way' },
   unit: { km: 'km', m: 'm', h: 'h', min: 'min' },
-  stat: { length: 'Length', high: 'High point', gain: 'Climb', time: 'Time', away: 'Distance from you' },
+  stat: { length: 'Length', high: 'High point', gain: 'Climb', time: 'Time', away: 'Distance from you', shape: 'Route type' },
   link: {
     ksrnr: 'Official page',
     darb: 'Darb page',

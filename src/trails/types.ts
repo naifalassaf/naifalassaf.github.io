@@ -1,6 +1,8 @@
 export type Lang = 'ar' | 'en'
 export type SourceId = 'ksrnr' | 'darb' | 'asir'
 export type Difficulty = 'easy' | 'moderate' | 'hard'
+/** how a Trail goes: back to its start another way, back the same way, or to somewhere else */
+export type Shape = 'loop' | 'out-and-back' | 'one-way'
 
 export interface Bilingual {
   ar: string
@@ -22,6 +24,8 @@ export interface Trail {
   /** [min, max] in minutes */
   duration: [number, number] | null
   difficulty: Difficulty | null
+  /** null when there's no Route and nobody has set it by hand */
+  shape: Shape | null
   /** [lat, lon] */
   start: [number, number] | null
   page: { ar: string; en: string }

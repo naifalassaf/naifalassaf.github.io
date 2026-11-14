@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import data from './data/trails.json'
 import TrailMap from './TrailMap'
 import PhoneLayout from './PhoneLayout'
-import { Chips, Svg, TrailLinks, type FilterGroup, type Sort } from './parts'
+import { Chips, Svg, Tags, TrailLinks, type FilterGroup, type Sort } from './parts'
 import { LOCKUP_SVG } from './lockup'
 import { rememberLang } from './i18n'
 import { difficultyRank, duration, fold, haystack, km, num, pick } from './format'
@@ -332,7 +332,7 @@ function TrailItem(props: { tr: Trail; lang: Lang; on: boolean; hasRoute: boolea
           {pick(tr.name, lang)}
           {lang === 'en' && tr.nameEnOurs && <sup title={t('about.oursEn')}>*</sup>}
         </span>
-        {tr.difficulty && <span className={`pill ${tr.difficulty}`}>{t(`difficulty.${tr.difficulty}`)}</span>}
+        <Tags tr={tr} />
       </h2>
       {secondary && (
         <p className="alt" lang={other} dir={other === 'ar' ? 'rtl' : 'ltr'}>

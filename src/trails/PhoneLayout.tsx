@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import TrailMap from './TrailMap'
 import { LOCKUP_SVG } from './lockup'
 import { duration, km, num, pick } from './format'
-import { Chips, Svg, TrailLinks, type FilterGroup, type Sort } from './parts'
+import { Chips, Svg, Tags, TrailLinks, type FilterGroup, type Sort } from './parts'
 import { heightOf, NEXT, settle, TOP, type Snap } from './sheet'
 import type { Lang, Routes, Trail } from './types'
 import type { MyLocation } from './useMyLocation'
@@ -236,7 +236,7 @@ export default function PhoneLayout(p: PhoneProps) {
                 {pick(sel.name, lang)}
                 {lang === 'en' && sel.nameEnOurs && <sup title={t('about.oursEn')}>*</sup>}
               </span>
-              {sel.difficulty && <span className={`pill ${sel.difficulty}`}>{t(`difficulty.${sel.difficulty}`)}</span>}
+              <Tags tr={sel} />
             </h2>
             {sel.name[other] && (
               <p className="alt" lang={other} dir={other === 'ar' ? 'rtl' : 'ltr'}>
@@ -323,7 +323,9 @@ export default function PhoneLayout(p: PhoneProps) {
                         </span>
                         <span className="row-meta">
                           <b>{tr.lengthKm != null ? `${num(lang, tr.lengthKm)} ${t('unit.km')}` : '—'}</b>
-                          {tr.duration && <small>{duration(tr.duration, lang, u)}</small>}
+                          {(tr.duration || tr.shape) && (
+                            <small>{[tr.duration && duration(tr.duration, lang, u), tr.shape && t(`shape.${tr.shape}`)].filter(Boolean).join(' · ')}</small>
+                          )}
                         </span>
                       </button>
                     </li>
