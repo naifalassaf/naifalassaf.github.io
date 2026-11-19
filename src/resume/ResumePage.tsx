@@ -23,7 +23,7 @@ export default function ResumePage() {
   const contact: ReactNode[] = [
     basics.phone && <a href={`tel:${basics.phone.replace(/\s/g, '')}`}>{basics.phone}</a>,
     <a href={`mailto:${basics.email}`}>{basics.email}</a>,
-    ...basics.links.map((l) => <a href={l.url}>{l.label}</a>),
+    ...basics.links.filter((l) => l.kind !== 'github').map((l) => <a href={l.url}>{l.label}</a>),
   ].filter(Boolean)
 
   return (
