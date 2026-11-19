@@ -95,9 +95,9 @@
       "showOn": ["site", "resume"]
     },
     {
-      "name": "Haseen",
-      "description": "Saudi Arabia's national portal for cybersecurity services, with 2,500+ registered entities, 7,000+ users, and 34 e-services. Worked on several of its platforms. Built the front end of its Camunda 7 request management system, which replaced a process run over email and spreadsheets and has dashboards for request throughput and user behavior.",
-      "tags": ["React", "TypeScript", "Camunda 7", "ECharts", "Ant Design"],
+      "name": "Government cybersecurity services portal",
+      "description": "A national portal for cybersecurity services used by thousands of organizations and users. Worked on several of its platforms. Built the front end of its request management system, which replaced a process run over email and spreadsheets and has dashboards for request throughput and user behavior.",
+      "tags": ["Front end", "Workflow automation", "Data visualization"],
       "showOn": ["site", "resume"]
     },
     {
@@ -107,9 +107,9 @@
       "showOn": ["site", "resume"]
     },
     {
-      "name": "Global Cybersecurity Forum app",
-      "description": "Built features for the GCF mobile app in Flutter and Dart with reusable components, and shipped the first one to production within a week of learning Dart.",
-      "tags": ["Flutter", "Dart", "Mobile"],
+      "name": "Cybersecurity conference mobile app",
+      "description": "Built features for the mobile app of a large international cybersecurity conference with reusable components, and shipped the first one to production within a week of picking up a new framework.",
+      "tags": ["Mobile", "Cross-platform"],
       "showOn": ["site", "resume"]
     },
     {
